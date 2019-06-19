@@ -4,7 +4,7 @@
 int main(int argc, char** argv)
 {
 	int num = 8;
-	int *ptr = (int)malloc(sizeof(int));
+	int *ptr = (int*)malloc(sizeof(int));
 	ptr = &num;
 	
 	printf("num = %d\n", num);
@@ -17,8 +17,6 @@ int main(int argc, char** argv)
 	printf("num = %d\n", num);
 	printf("CANNOT ACCESS *ptr\n");
 	printf("ptr = %d\n", ptr);
-	
-	system("pause");
 	
 	return 0;
 }

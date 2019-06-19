@@ -28,7 +28,5 @@ int main(int argc, char** argv)
 	printf("ptr = %d\n", *ptr);
 	printf("foo_t.x = %d\n", foo_t->x);
 	
-	system("pause");
-	
 	return 0;	
 }

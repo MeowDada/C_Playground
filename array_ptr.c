@@ -9,7 +9,6 @@ int main(int argc, char* argv)
 	{
 		printf("%d ", i[a]);
 	}
-	system("pause");
 	
 	return 0;
 }

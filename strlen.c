@@ -12,7 +12,5 @@ int main(int argc, char** argv)
 	
 	const char * new_str = strdup(str);
 	
-	system("pause");
-	
 	return 0;
 }
