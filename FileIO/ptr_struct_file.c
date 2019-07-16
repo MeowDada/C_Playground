@@ -33,43 +33,38 @@ int main(int argc, char **argv)
     do {
 #if defined(__linux__)
         // Read position of the file
+        printf("[Read position]\n");
         print("src_IO_read_ptr", fp_src->_IO_read_ptr);
         print("_IO_read_end", fp_src->_IO_read_end);
         print("_IO_read_base", fp_src->_IO_read_base);
 
         // Write position of the file
+        printf("[Write position]\n");
         print("src_IO_write_ptr", fp_src->_IO_write_ptr);
         print("_IO_write_end", fp_src->_IO_write_end);
         print("_IO_write_base", fp_src->_IO_write_base);
 
         // Buffer position of the file
-        print("_IO_buf_base\t", fp_src->_IO_buf_base);
-        print("_IO_buf_end\t", fp_src->_IO_buf_end);
+        printf("[Buffer position]\n");
+        print("_IO_buf_base", fp_src->_IO_buf_base);
+        print("_IO_buf_end", fp_src->_IO_buf_end);
 
         /* 
         *   Read from the file and put the data into read buffer,
         *   Then write the data from read buffer to the destination. 
         */
+        printf("[Read & Write data]\n");
         memset(rbuffer, '\0', RBUF_SIZE);
         i = fread(rbuffer, sizeof(char), RBUF_SIZE, fp_src);
         fwrite(rbuffer, sizeof(char), i, fp_des);
 
+        printf("[Target position]\n");
         print("des_IO_read_ptr", fp_des->_IO_read_ptr);
         print("des_IO_write_ptr", fp_des->_IO_write_ptr);
 #elif defined(_WIN32)
-    // Read position of the file
+        // Read position of the file
         print("src_IO_read_ptr", fp_src->_ptr);
-        print("_IO_read_end", fp_src->_IO_read_end);
         print("_IO_read_base", fp_src->_base);
-
-        // Write position of the file
-        print("src_IO_write_ptr", fp_src->_IO_write_ptr);
-        print("_IO_write_end", fp_src->_IO_write_end);
-        print("_IO_write_base", fp_src->_IO_write_base);
-
-        // Buffer position of the file
-        print("_IO_buf_base\t", fp_src->_IO_buf_base);
-        print("_IO_buf_end\t", fp_src->_IO_buf_end);
 
         /* 
         *   Read from the file and put the data into read buffer,
@@ -78,9 +73,6 @@ int main(int argc, char **argv)
         memset(rbuffer, '\0', RBUF_SIZE);
         i = fread(rbuffer, sizeof(char), RBUF_SIZE, fp_src);
         fwrite(rbuffer, sizeof(char), i, fp_des);
-
-        print("des_IO_read_ptr", fp_des->_IO_read_ptr);
-        print("des_IO_write_ptr", fp_des->_IO_write_ptr);
 #endif
     }while (i == RBUF_SIZE);
 
