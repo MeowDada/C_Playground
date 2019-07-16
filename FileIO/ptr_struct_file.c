@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     setvbuf(fp_src, rbuffer, _IOLBF, WBUF_SIZE);
 
     do {
-#if defined(LINUX)
+#if defined(__linux__)
         // Read position of the file
         print("src_IO_read_ptr", fp_src->_IO_read_ptr);
         print("_IO_read_end", fp_src->_IO_read_end);
