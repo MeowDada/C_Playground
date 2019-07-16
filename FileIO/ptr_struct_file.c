@@ -33,6 +33,19 @@ int main(int argc, char **argv)
     do {
         print("src_IO_read_ptr", fp_src->_IO_read_ptr);
         print("_IO_read_end", fp_src->_IO_read_end);
+        print("_IO_read_base", fp_src->_IO_read_base);
+        print("src_IO_write_ptr", fp_src->_IO_write_ptr);
+        print("_IO_write_end", fp_src->_IO_write_end);
+        print("_IO_write_base", fp_src->_IO_write_base);
+        print("_IO_buf_base\t", fp_src->_IO_buf_base);
+        print("_IO_buf_end\t", fp_src->_IO_buf_end);
+
+        memset(rbuffer, '\0', RBUF_SIZE);
+        i = fread(rbuffer, sizeof(char), RBUF_SIZE, fp_src);
+        fwrite(wbuffer, sizeof(char), i, fp_des);
+
+        print("des_IO_read_ptr", fp_des->_IO_read_ptr);
+        print("des_IO_write_ptr", fp_des->_IO_write_ptr);
     }while (i == RBUF_SIZE);
 
     fclose(fp_src);
