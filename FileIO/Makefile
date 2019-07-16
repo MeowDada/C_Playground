@@ -19,3 +19,4 @@ clean_ptr_struct_file:
 
 clean_buff_type_test:
 	rm $(BUFF_TYPE_TEST)
+
