@@ -13,11 +13,11 @@ int main(int argc, char **argv)
     pr_stdio("stdout", stdout);
     pr_stdio("stderr", stderr);
 
-    if ((fp = fopen("/etc/motd", "r")) == NULL)
+    if ((fp = fopen("test.txt", "r")) == NULL)
         printf("fopen error");
     if (fgetc(fp) == EOF)
         printf("getc error");
-    pr_stdio("/etc/motd", fp);
+    pr_stdio("test.txt", fp);
     
     return 0;
 }
