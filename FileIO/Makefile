@@ -1,4 +1,4 @@
-.PHONY all clean
+.PHONY: all clean
 
 CC := gcc
 PTR_STRUCT_FILE := ptr_struct_file
