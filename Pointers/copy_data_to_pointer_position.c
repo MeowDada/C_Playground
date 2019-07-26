@@ -36,6 +36,7 @@ int main(int argc, char **argv)
         memcpy(buf->ptr, &i, sizeof(int));
         printf("Copying %d to buffer...\n", i);
         printf("The result of recent copied to buffer is %d\n", *(int*)buf->ptr);
+        printf("buf->ptr = %p, buf->data = %p\n", buf->ptr, buf->data);
         buf->ptr += sizeof(int);
     }
 
