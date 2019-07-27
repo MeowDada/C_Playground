@@ -2,14 +2,14 @@
 
 CC := gcc
 
-TARGETS := $(POSIX_CP_EXAMPLE_TARGET) $(CREATE_NO_WRITEFILE_TARGET) $(CREATE_NO_WRITEFILE_NAME)
-
 POSIX_CP_EXAMPLE_SRCS   := posix_cp_example.c
 POSIX_CP_EXAMPLE_TARGET := posix_cp_example
 
 CREATE_NO_WRITEFILE_SRCS   := create_no_writefile.c
 CREATE_NO_WRITEFILE_TARGET := create_no_writefile
 CREATE_NO_WRITEFILE_NAME   := no_writefile.txt
+
+TARGETS := $(POSIX_CP_EXAMPLE_TARGET) $(CREATE_NO_WRITEFILE_TARGET) $(CREATE_NO_WRITEFILE_NAME)
 
 all: build_posix_cp_example build_create_no_write_file
 
