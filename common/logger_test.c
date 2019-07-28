@@ -1,0 +1,11 @@
+#include "logger.h"
+
+int main(int argc, char **argv)
+{
+    setup_logger(stdout, LOG_LEVEL_ERROR);
+
+    LOGGING_FATAL("test = %d %d", 123, 456);
+    LOGGING_FATAL("test 2 = %s %d", "tttttest", 555);
+
+    return 0;
+}

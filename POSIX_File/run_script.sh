@@ -8,7 +8,7 @@ POSIX_CP_EXAMPLE_COPY_TARGET=lorem_copy.txt
 
 CREATE_NO_WRITEFILE_BASENAME=create_no_writfile
 CREATE_NO_WRITEFILE_PROG=./create_no_writefile
-CREATE_NO_WRITEFILE_BUILD_CMD=build_create_no_writefile
+CREATE_NO_WRITEFILE_BUILD_CMD=build_posix_create_no_writefile
 CREATE_NO_WRITEFILE_FILENAME=no_writefile.txt
 
 POSIX_OPEN_EXAMPLE_BASENAME=posix_open_example
@@ -18,6 +18,11 @@ POSIX_OPEN_EXAMPLE_BUILD_CMD=build_posix_open_example
 FCNTL_DUP_FD_BASENAME=fcntl_dup_fd
 FCNTL_DUP_FD_PROG=./fcntl_dup_fd
 FCNTL_DUP_FD_BUILD_CMD=build_posix_fcntl_dup_fd
+
+FCNTL_EXAMPLE_BASENAME=fcntl_example
+FCNTL_EXAMPLE_PROG=./fcntl_example
+FCNTL_EXAMPLE_BUILD_CMD=build_posix_fcntl_example
+FCNTL_EXAMPLE_ARGS=/dev/stdout
 
 PROGAM_LIST=($POSIX_CP_EXAMPLE_BASENAME $CREATE_NO_WRITEFILE_BASENAME $FCNTL_DUP_FD_BASENAME)
 
@@ -96,6 +101,24 @@ function run_fcntl_dup_fd () {
     fi
 }
 
+function run_fcntl_example () {
+    if [ -f "$FCNTL_EXAMPLE_PROG" ]; then
+        echo check permission of $FCNTL_EXAMPLE_ARGS
+        $FCNTL_EXAMPLE_PROG $FCNTL_EXAMPLE_ARGS
+    else
+        echo "File: ${FCNTL_EXAMPLE_PROG} does not exist."
+        echo "Automatically try to rebuild it..."
+        make ${FCNTL_EXAMPLE_BUILD_CMD}
+        if [ $? == 0 ]; then
+            echo "Build ${FCNTL_EXAMPLE_PROG} successfully!"
+            echo check permission of $FCNTL_EXAMPLE_ARGS
+            $FCNTL_EXAMPLE_PROG $FCNTL_EXAMPLE_ARGS
+        else
+            echo "Build ${FCNTL_EXAMPLE_PROG} failed with some errors..."
+        fi
+    fi
+}
+
 function run_program_if_valid_cmd () {
     if [ $(containsElement "$1" ${PROGRAM_LIST[@]})==0 ]; then
         run_$1
@@ -104,10 +127,22 @@ function run_program_if_valid_cmd () {
     fi
 }
 
+function run_all_program {
+    run_create_no_writefile
+    run_fcntl_dup_fd
+    run_fcntl_example
+    run_posix_cp_example
+    run_posix_open_example
+}
+
 function determine_program_to_run () {
     for var in "$@"
     do
-        run_program_if_valid_cmd $var
+        if [ "$var" == "all" ]; then
+            run_all_program
+        else
+            run_program_if_valid_cmd $var
+        fi
     done
 }
 
