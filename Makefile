@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 MAKEFILES := $(shell find . -maxdepth 2 -type f -name Makefile)
-SUBDIRS   :=   $(filter-out ./,$(dir $(MAKEFILES)))
+SUBDIRS   := $(filter-out ./,$(dir $(MAKEFILES)))
 
 all:
 	for dir in $(SUBDIRS) ; do \
