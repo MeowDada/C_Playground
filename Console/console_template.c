@@ -35,7 +35,7 @@ void parse_commands(const char *program_name, int argc, char **argv)
     while ((opt = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
         switch (opt) {
             case 'L':
-                log_file = optarg;
+                log_file = strdup(optarg);
                 break;
             case 'l':
                 log_level = atoi(optarg);
