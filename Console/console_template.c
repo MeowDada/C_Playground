@@ -38,7 +38,12 @@ void parse_commands(const char *program_name, int argc, char **argv)
                 log_file = strdup(optarg);
                 break;
             case 'l':
-                log_level = atoi(optarg);
+                if (optarg) {
+                    log_level = atoi(optarg);
+                }
+                else {
+                    log_level = LOG_LEVEL_INFO;
+                }
                 break;
             case 'h':
             case '?':
