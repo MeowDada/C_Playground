@@ -28,6 +28,18 @@ int setup_logger(FILE* fd, int log_level)
     return 0;
 }
 
+#if defined(__MINGW32__)
+static void logging_to_file(FILE *fp, int level, char *msg)
+{
+    fprintf(fp, "%s\n", msg);
+}
+#else
+static void logging_to_file(FILE *fp, int level, char *msg)
+{
+    fprintf(fp, "%s\n", msg);
+}
+#endif
+
 static void logging_to_stderr(const char *msg)
 {
     fprintf(stderr, "%s\n", msg);
@@ -62,15 +74,12 @@ static void do_log_msg(void *zc, int level,
 
     msg[written] = '\0';
 end:
-    /*
     if (zc) {
-        logging_to_file
+        logging_to_file((FILE *)zc, level, msg);
     }
     else {
-        logging_to_stderr
+        logging_to_stderr(msg);
     }
-     */
-    logging_to_stderr(msg);
 }
 
 void log_msg(void *zc, int level, const char *file, int line,
