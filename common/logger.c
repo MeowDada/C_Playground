@@ -3,8 +3,9 @@
 
 #define MSG_LEN 8192L
 
-FILE  *_default_log_stream = NULL;
-int    _default_log_level  = LOG_LEVEL_ERROR;
+void  *_default_log_category = NULL;
+FILE  *_default_log_stream   = NULL;
+int    _default_log_level    = LOG_LEVEL_ERROR;
 
 const char *log_level_string[] = {
     [LOG_LEVEL_FATAL] = "FATAL",
@@ -32,21 +33,20 @@ static void logging_to_stderr(const char *msg)
     fprintf(stderr, "%s\n", msg);
 }
 
-static void do_log_msg(int level,
+static void do_log_msg(void *zc, int level,
 	const char *file, int line, const char *func,
 	const char *format, va_list args)
 {
     const char *tag = log_level_string[level];
-    printf("%s\n", tag);
     char msg[MSG_LEN] = { 0 };
     int written = 0;
 
     /* Level */
-    written = snprintf(msg, MSG_LEN, "[%-6s] ", tag);
+    written = snprintf(msg, MSG_LEN, "[%-5s] ", tag);
     if (written < 0)
         return;
     
-    written = vsnprintf(msg + written, MSG_LEN - written, format, args);
+    written += vsnprintf(msg + written, MSG_LEN - written, format, args);
     if (written < 0)
         return;
     
@@ -73,7 +73,7 @@ end:
     logging_to_stderr(msg);
 }
 
-void log_msg(int level, const char *file, int line,
+void log_msg(void *zc, int level, const char *file, int line,
     const char *func, const char *format, ...)
 {
     va_list argptr;
@@ -81,7 +81,7 @@ void log_msg(int level, const char *file, int line,
     if (level > _default_log_level)
         return;
     
-        (argptr, format);
-    do_log_msg(level, file, line, func, format, argptr);
+    va_start(argptr, format);
+    do_log_msg(NULL, level, file, line, func, format, argptr);
     va_end(argptr);
 }
