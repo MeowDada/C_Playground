@@ -11,7 +11,7 @@ LINK_SO_TEST_DEPENDENCY := logger
 all: build_link_so_test
 
 build_link_so_test:
-	$(CC) -o $(LINK_SO_TEST_TARGET) $(LINK_SO_TEST_SRCS) -I $(INCLUDE_PATH) -L $(LIBRARY_PATH) -l $(logger)
+	$(CC) -o $(LINK_SO_TEST_TARGET) $(LINK_SO_TEST_SRCS) -I $(INCLUDE_PATH) -L $(LIBRARY_PATH) -l $(LINK_SO_TEST_DEPENDENCY)
 
 clean: clean_link_so_test
 
