@@ -2,7 +2,9 @@
 
 int main(int argc, char **argv)
 {
-    setup_logger(stdout, LOG_LEVEL_DEBUG);  
+    FILE *fp = fopen("log_test.log", "w+");
+
+    setup_logger(fp, LOG_LEVEL_DEBUG);  
 
     LOGGING_FATAL("test 1 = %d %d", 123, 456);
     LOGGING_FATAL("test 2 = %s %d", "tttttest", 555);
@@ -10,6 +12,8 @@ int main(int argc, char **argv)
     LOGGING_WARN("test 4");
     LOGGING_INFO("test 5");
     LOGGING_DEBUG("test 6");
+
+    fclose(fp);
 
     return 0;
 }

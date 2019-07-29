@@ -3,7 +3,6 @@
 
 #define MSG_LEN 8192L
 
-void  *_default_log_category = NULL;
 FILE  *_default_log_stream   = NULL;
 int    _default_log_level    = LOG_LEVEL_ERROR;
 
@@ -15,14 +14,13 @@ const char *log_level_string[] = {
     [LOG_LEVEL_DEBUG] = "DEBUG"
 };
 
-int setup_logger(FILE* fd, int log_level)
+int setup_logger(FILE *fd, int log_level)
 {
-    if (!fd) {
-        fprintf(stderr, "Invalid file descriptor");
-        return -1;
-    }
-
-    _default_log_stream = fd;
+    if (!fd)
+        _default_log_stream = stderr;
+    else
+        _default_log_stream = fd;
+    
     _default_log_level  = log_level;
 
     return 0;
@@ -91,6 +89,6 @@ void log_msg(void *zc, int level, const char *file, int line,
         return;
     
     va_start(argptr, format);
-    do_log_msg(NULL, level, file, line, func, format, argptr);
+    do_log_msg(zc, level, file, line, func, format, argptr);
     va_end(argptr);
 }
