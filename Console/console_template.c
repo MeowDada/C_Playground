@@ -11,7 +11,7 @@ static struct option long_options[] = {
 };
 static const char *short_options = "L:l::dh";
 
-static char *log_file  = NULL;
+char        *log_file  = NULL;
 static int   log_level = LOG_LEVEL_ERROR; 
 
 void print_usage(const char *program_name)
@@ -51,7 +51,9 @@ void parse_commands(const char *program_name, int argc, char **argv)
 
 void setup_configurations(void)
 {
-    FILE *log_fd = fopen(log_file, "w+");
+    FILE *log_fd = NULL;
+    if (log_file)
+        log_fd = fopen(log_file, "w+");
 
     if (setup_logger(log_fd, log_level) != 0) {
         fprintf(stderr, "Failed to setup logger!\n");
