@@ -117,23 +117,28 @@ int main(int argc, char **argv)
 
     pthread_t producer_thread, consumer_thread;
     pthread_attr_t attr;
+    void *status = NULL;
+    int retval = 0;
 
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-    int retval = pthread_create(&producer_thread, &attr, producer_stuff, (void *)buf);
+    /* Create producer thread */
+    retval = pthread_create(&producer_thread, &attr, producer_stuff, (void *)buf);
     if (retval) {
         LOGGING_ERROR("Failed to create producer thread");
         return EXIT_FAILURE;
     }
-    void *status = NULL;
-    pthread_join(producer_thread, &status);
 
+    /* Create consumer thread */
     retval = pthread_create(&consumer_thread, &attr, consumer_stuff, (void *)buf);
     if (retval) {
         LOGGING_ERROR("Failed to create consumer thread");
         return EXIT_FAILURE;
     }
+    pthread_attr_destroy(&attr);
+
+    pthread_join(producer_thread, &status);
     pthread_join(consumer_thread, &status);
 
     return 0;
