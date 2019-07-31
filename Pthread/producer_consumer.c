@@ -25,7 +25,7 @@ int          num_gen_per_loop = 10;
 
 int          num_read         = 0;
 
-pthread_mutex_lock lock;
+pthread_mutex_t lock;
 
 void print_usage(const char *program_name)
 {
