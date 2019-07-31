@@ -134,6 +134,7 @@ int main(int argc, char **argv)
         LOGGING_ERROR("Failed to create consumer thread");
         return EXIT_FAILURE;
     }
+    pthread_join(consumer_thread, &status);
 
     return 0;
 }
