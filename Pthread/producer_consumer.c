@@ -78,7 +78,7 @@ typedef struct buffer {
     size_t capacity;
     size_t size;
     int *data;
-} but_t;
+} buf_t;
 
 void producer_stuff(buf_t *buf)
 {
