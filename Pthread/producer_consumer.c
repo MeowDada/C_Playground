@@ -23,7 +23,8 @@ size_t       buffer_capacity  = 30;
 int          num_gen          = 500;
 int          num_gen_per_loop = 5;
 
-int          num_read         = 0;
+int          num_has_gen      = 0;
+int          num_has_read     = 0;
 
 pthread_mutex_t lock;
 
@@ -104,6 +105,7 @@ void *producer_stuff(void *_buf)
             buf->size++;
         }
         total_gen_num -= num_to_gen;
+        num_has_gen += num_to_gen;
         pthread_mutex_unlock(&lock);
     }
 
@@ -114,12 +116,12 @@ void *consumer_stuff(void *_buf)
 {
     buf_t *buf = (buf_t *)_buf;
 
-    while (num_read != num_gen) {
+    while (num_has_read != num_gen) {
         pthread_mutex_lock(&lock);
         if (buf->size > 0) {
-            LOGGING_INFO("Current read num = %d, [num_gen , num_read] = [%3d,%3d]", buf->data[buf->size-1], num_gen, num_read);
+            LOGGING_INFO("Current read num = %d, [num_has_gen,num_has_read] = [%03d,%03d]", buf->data[buf->size-1], num_has_gen, num_has_read);
             buf->size -= 1;
-            num_read += 1;
+            num_has_read += 1;
         }
         pthread_mutex_unlock(&lock);
     }
