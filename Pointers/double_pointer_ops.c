@@ -31,5 +31,7 @@ int main(int argc, char **argv)
         LOGGING_INFO("Cannot dereference *double_ptr, because it is a NULL pointer");
     }
 
+    free(double_ptr);
+
     return 0;
 }
