@@ -98,11 +98,13 @@ void *producer_stuff(void *_buf)
         pthread_mutex_lock(&lock);
         if (buf->capacity - buf->size > 0) {
             int num_to_gen = rand() % num_gen_per_loop;
-            num_to_gen = (num_to_gen > total_gen_num)? num_gen : total_gen_num;
+            num_to_gen = (num_to_gen > (num_gen - total_gen_num))? (num_gen - total_gen_num) : total_gen_num;
+            LOGGING_INFO("[Producer] It's my turn, gonna generate %d numbers...", num_to_gen);
             int i = 0;
             for (i = 0; i < num_to_gen; i++) {
                 int idx = buf->size;
-                buf->data[idx] = rand() % 10;   /* assign only 0-9 */
+                int content = rand() % 10;
+                buf->data[idx] = content % 10;   /* assign only 0-9 */
                 buf->size++;
             }
             total_gen_num -= num_to_gen;
@@ -121,7 +123,7 @@ void *consumer_stuff(void *_buf)
     while (num_has_read != num_gen) {
         pthread_mutex_lock(&lock);
         if (buf->size > 0) {
-            LOGGING_INFO("Current read num = %d, [num_has_gen,num_has_read] = [%03d,%03d]", buf->data[buf->size-1], num_has_gen, num_has_read);
+            LOGGING_INFO("[Consumer] Current read num = %d, [num_has_gen,num_has_read] = [%03d,%03d]", buf->data[buf->size-1], num_has_gen, num_has_read);
             buf->size -= 1;
             num_has_read += 1;
         }
