@@ -1,6 +1,7 @@
 .PHONY: all clean
 
 CC                := gcc
+CCFLAGS           := -pthread
 
 INCLUDE_PATH				:= ../common
 LIBRARY_PATH				:= ../lib
@@ -14,7 +15,7 @@ CLEAN_TARGET				:= $(PRODUCER_CONSUMER_PROG)
 all: build_producer_consumer
 
 build_producer_consumer:
-	$(CC) -o $(PRODUCER_CONSUMER_PROG) $(PRODUCER_CONSUMER_SRCS) -I $(INCLUDE_PATH) -L $(LIBRARY_PATH) -l $(PRODUCER_CONSUMER_DEPENDENCY)
+	$(CC) $(CCFLAGS) -o $(PRODUCER_CONSUMER_PROG) $(PRODUCER_CONSUMER_SRCS) -I $(INCLUDE_PATH) -L $(LIBRARY_PATH) -l $(PRODUCER_CONSUMER_DEPENDENCY)
 
 clean:
 	rm -rf $(CLEAN_TARGET)
