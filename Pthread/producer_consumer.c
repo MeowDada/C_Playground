@@ -127,7 +127,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
     void *status = NULL;
-    pthread_join(&producer_thread, &status);
+    pthread_join(producer_thread, &status);
 
     retval = pthread_create(&consumer_thread, &attr, consumer_stuff, (void *)buf);
     if (retval) {
