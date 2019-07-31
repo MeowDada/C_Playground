@@ -85,7 +85,7 @@ void producer_stuff(buf_t *buf)
     int temp[] = {1,2,3,4,5};
 
     memcpy(buf->data, temp, sizeof(int)*5);
-    size += 5;
+    buf->size += 5;
 }
 
 void consumer_stuff(buf_t *buf)
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
     }
 
     retval = pthread_create(&consumer_thread, NULL, consumer_stuff, buf);
-    if (retavl) {
+    if (retval) {
         LOGGING_ERROR("Failed to create consumer thread");
         return EXIT_FAILURE;
     }
