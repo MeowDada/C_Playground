@@ -96,16 +96,18 @@ void *producer_stuff(void *_buf)
 
     while (total_gen_num > 0) {
         pthread_mutex_lock(&lock);
-        int num_to_gen = rand() % num_gen_per_loop;
-        num_to_gen = (num_to_gen > total_gen_num)? num_gen : total_gen_num;
-        int i = 0;
-        for (i = 0; i < num_to_gen; i++) {
-            int idx = buf->size;
-            buf->data[idx] = rand() % 10;   /* assign only 0-9 */
-            buf->size++;
+        if (buf->capacity - buf->size > 0) {
+            int num_to_gen = rand() % num_gen_per_loop;
+            num_to_gen = (num_to_gen > total_gen_num)? num_gen : total_gen_num;
+            int i = 0;
+            for (i = 0; i < num_to_gen; i++) {
+                int idx = buf->size;
+                buf->data[idx] = rand() % 10;   /* assign only 0-9 */
+                buf->size++;
+            }
+            total_gen_num -= num_to_gen;
+            num_has_gen += num_to_gen;
         }
-        total_gen_num -= num_to_gen;
-        num_has_gen += num_to_gen;
         pthread_mutex_unlock(&lock);
     }
 
