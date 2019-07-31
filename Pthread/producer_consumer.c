@@ -80,21 +80,27 @@ typedef struct buffer {
     int *data;
 } buf_t;
 
-void producer_stuff(buf_t *buf)
+void *producer_stuff(void *_buf)
 {
+    buf_t *buf = (buf_t *)_buf;
+
     int temp[] = {1,2,3,4,5};
 
     memcpy(buf->data, temp, sizeof(int)*5);
     buf->size += 5;
+    pthread_exit(NULL);
 }
 
-void consumer_stuff(buf_t *buf)
+void *consumer_stuff(void *_buf)
 {
+    buf_t *buf = (buf_t *)_buf;
+
     int i = 0;
     for (i = 0; i < buf->size; i++) {
         printf("%d ", buf->data[i]);
     }
     printf("\n");
+    pthread_exit(NULL);
 }
 
 int main(int argc, char **argv)
@@ -110,13 +116,13 @@ int main(int argc, char **argv)
     buf->size = 0;
 
     pthread_t producer_thread, consumer_thread;
-    int retval = pthread_create(&producer_thread, NULL, producer_stuff, buf);
-    if (retavl) {
+    int retval = pthread_create(&producer_thread, NULL, producer_stuff, (void *)buf);
+    if (retval) {
         LOGGING_ERROR("Failed to create producer thread");
         return EXIT_FAILURE;
     }
 
-    retval = pthread_create(&consumer_thread, NULL, consumer_stuff, buf);
+    retval = pthread_create(&consumer_thread, NULL, consumer_stuff, (void *)buf);
     if (retval) {
         LOGGING_ERROR("Failed to create consumer thread");
         return EXIT_FAILURE;
