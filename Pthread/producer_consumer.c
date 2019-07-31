@@ -117,7 +117,7 @@ void *consumer_stuff(void *_buf)
     while (num_read != num_gen) {
         pthread_mutex_lock(&lock);
         if (buf->size > 0) {
-            LOGGING_INFO("%d", buf->data[buf->size-1]);
+            LOGGING_INFO("Current read num = %d, [num_gen , num_read] = [%3d,%3d]", buf->data[buf->size-1], num_gen, num_read);
             buf->size -= 1;
             num_read += 1;
         }
