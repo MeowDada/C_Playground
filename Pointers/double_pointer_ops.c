@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "common.h"
 
-void try_assign_double_pointer(int **double_ptr)
+void try_assign_double_pointer(int *value, int **double_ptr)
 {
-    LOGGING_INFO("Try assign *double_ptr = 5");
+    LOGGING_INFO("Try assign *double_ptr = &value");
     if (*double_ptr) {
-        *double_ptr = 5;
+        *double_ptr = value;
     }
     else {
         LOGGING_INFO("*double_ptr is NULL, cannot assign value to it");
@@ -21,7 +21,7 @@ int main(int argc, char **argv)
     int **double_ptr = NULL;
     LOGGING_INFO("Initialize int value = %d, int **double_ptr = NULL", value);
 
-    try_assign_double_pointer(double_ptr);
+    try_assign_double_pointer(&value, double_ptr);
 
     if (*double_ptr) {
         LOGGING_INFO("*double_ptr = %d", *double_ptr);
@@ -29,6 +29,6 @@ int main(int argc, char **argv)
     else {
         LOGGING_INFO("Cannot dereference *double_ptr, because it is a NULL pointer");
     }
-    
+
     return 0;
 }
