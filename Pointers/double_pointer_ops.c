@@ -4,7 +4,7 @@
 
 void try_assign_double_pointer(int *single_ptr, int **double_ptr)
 {
-    LOGGING_INFO("Try assign *double_ptr = value");
+    LOGGING_INFO("Try assign *double_ptr = single_ptr");
     *double_ptr = single_ptr;
     LOGGING_INFO("Assign *double_ptr = single_ptr not yet crashed");
 }
@@ -15,8 +15,10 @@ int main(int argc, char **argv)
 
     int   value      = 5;
     int  *single_ptr = &value;
-    int **double_ptr = NULL;
-    LOGGING_INFO("Initialize int value = %d, int **double_ptr = NULL", value);
+    int **double_ptr = malloc(sizeof(int **));
+    LOGGING_INFO("Initialize int   value      = %d", value);
+    LOGGING_INFO("           int  *single_ptr = &value");
+    LOGGING_INFO("           int **double_ptr = NULL");
 
     try_assign_double_pointer(single_ptr, double_ptr);
 
