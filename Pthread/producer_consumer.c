@@ -6,6 +6,8 @@
 #include <time.h>
 #include "common.h"
 
+#define MIN(x,y) (((x)>(y))?(y):(x))
+
 static struct option long_options[] = {
     {"size",         required_argument,  0, 's'},
     {"log-file",     required_argument,  0, 'L'},
@@ -98,7 +100,7 @@ void *producer_stuff(void *_buf)
         pthread_mutex_lock(&lock);
         if (buf->capacity - buf->size > 0) {
             int num_to_gen = rand() % num_gen_per_loop;
-            num_to_gen = (num_to_gen > (num_gen - total_gen_num))? (num_gen - total_gen_num) : total_gen_num;
+            num_to_gen = MIN(num_to_gen, buf->capacity - buf->size);
             LOGGING_INFO("[Producer] It's my turn, gonna generate %d numbers...", num_to_gen);
             int i = 0;
             for (i = 0; i < num_to_gen; i++) {
