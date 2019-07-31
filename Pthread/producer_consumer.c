@@ -18,10 +18,10 @@ static const char *short_options = "L:l::dh";
 char        *log_file  = NULL;
 static int   log_level = LOG_LEVEL_ERROR; 
 
-size_t       buffer_capacity = 30;
+size_t       buffer_capacity  = 30;
 
-int          num_gen          = 100;
-int          num_gen_per_loop = 10;
+int          num_gen          = 500;
+int          num_gen_per_loop = 5;
 
 int          num_read         = 0;
 
