@@ -4,13 +4,8 @@
 
 void try_assign_double_pointer(int *value, int **double_ptr)
 {
-    LOGGING_INFO("Try assign *double_ptr = &value");
-    if (*double_ptr) {
-        *double_ptr = value;
-    }
-    else {
-        LOGGING_INFO("*double_ptr is NULL, cannot assign value to it");
-    }
+    LOGGING_INFO("Try assign *double_ptr = value");
+    *double_ptr = value;
 }
 
 int main(int argc, char **argv)
@@ -24,7 +19,9 @@ int main(int argc, char **argv)
     try_assign_double_pointer(&value, double_ptr);
 
     if (*double_ptr) {
-        LOGGING_INFO("*double_ptr = %d", *double_ptr);
+        LOGGING_INFO("&value       = %p", &value);
+        LOGGING_INFO("*double_ptr  = %p", *double_ptr);
+        LOGGING_INFO("**double_ptr = %d", **double_ptr);
     }
     else {
         LOGGING_INFO("Cannot dereference *double_ptr, because it is a NULL pointer");
