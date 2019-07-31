@@ -20,9 +20,9 @@ static const char *short_options = "L:l::dh";
 char        *log_file  = NULL;
 static int   log_level = LOG_LEVEL_ERROR; 
 
-size_t       buffer_capacity  = 30;
+size_t       buffer_capacity  = 100;
 
-int          num_gen          = 500;
+int          num_gen          = 800;
 int          num_gen_per_loop = 5;
 
 int          num_has_gen      = 0;
@@ -101,6 +101,10 @@ void *producer_stuff(void *_buf)
         if (buf->capacity - buf->size > 0) {
             int num_to_gen = rand() % num_gen_per_loop;
             num_to_gen = MIN(num_to_gen, buf->capacity - buf->size);
+            if (num_to_gen == 0) {
+                pthread_mutex_unlock(&lock);
+                continue;
+            }
             LOGGING_INFO("[Producer] It's my turn, gonna generate %d numbers...", num_to_gen);
             int i = 0;
             for (i = 0; i < num_to_gen; i++) {
