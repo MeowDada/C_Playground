@@ -3,6 +3,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <pthread.h>
+#include <time.h>
 #include "common.h"
 
 static struct option long_options[] = {
@@ -18,6 +19,13 @@ char        *log_file  = NULL;
 static int   log_level = LOG_LEVEL_ERROR; 
 
 size_t       buffer_capacity = 30;
+
+int          num_gen          = 100;
+int          num_gen_per_loop = 10;
+
+int          num_read         = 0;
+
+pthread_mutex_lock lock;
 
 void print_usage(const char *program_name)
 {
@@ -83,11 +91,21 @@ typedef struct buffer {
 void *producer_stuff(void *_buf)
 {
     buf_t *buf = (buf_t *)_buf;
+    int total_gen_num = num_gen;
 
-    int temp[] = {1,2,3,4,5};
+    while (total_gen_num > 0) {
+        pthread_mutex_lock(&lock);
+        int num_to_gen = rand() % num_gen_per_loop;
+        num_to_gen = (num_to_gen > total_gen_num)? num_gen : total_gen_num;
+        for (i = 0; i < num_to_gen; i++) {
+            int idx = buf->size;
+            buf->data[idx] = rand() % 10;   /* assign only 0-9 */
+            buf->size++;
+        }
+        total_gen_num -= num_to_gen;
+        pthread_mutex_unlock(&lock);
+    }
 
-    memcpy(buf->data, temp, sizeof(int)*5);
-    buf->size += 5;
     pthread_exit(NULL);
 }
 
@@ -95,11 +113,16 @@ void *consumer_stuff(void *_buf)
 {
     buf_t *buf = (buf_t *)_buf;
 
-    int i = 0;
-    for (i = 0; i < buf->size; i++) {
-        printf("%d ", buf->data[i]);
+    while (num_read != num_gen) {
+        pthread_mutex_lock(&lock);
+        if (buf->size > 0) {
+            LOGGING_INFO("%d", buf->data[buf->size-1]);
+            buf->size -= 1;
+            num_read += 1;
+        }
+        pthread_mutex_unlock(&lock);
     }
-    printf("\n");
+
     pthread_exit(NULL);
 }
 
@@ -110,6 +133,8 @@ int main(int argc, char **argv)
     parse_commands(program_name, argc, argv);
     setup_configurations();
 
+    srand(time(NULL));
+
     buf_t *buf = malloc(sizeof(buf_t));
     buf->data = malloc(sizeof(int) * buffer_capacity);
     buf->capacity = buffer_capacity;
@@ -119,6 +144,12 @@ int main(int argc, char **argv)
     pthread_attr_t attr;
     void *status = NULL;
     int retval = 0;
+
+    if (pthread_mutex_init(&lock, NULL) != 0) {
+        LOGGING_ERROR("Failed to create mutex");
+        return EXIT_FAILURE;
+    }
+
 
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
@@ -136,10 +167,12 @@ int main(int argc, char **argv)
         LOGGING_ERROR("Failed to create consumer thread");
         return EXIT_FAILURE;
     }
+    /* pthread_join will block parent thread util the thread is finished */
+    pthread_join(consumer_thread, &status);
+    pthread_join(producer_thread, &status); 
+    pthread_mutex_destroy(&lock); 
     pthread_attr_destroy(&attr);
 
-    pthread_join(producer_thread, &status);
-    pthread_join(consumer_thread, &status);
 
     return 0;
 }
