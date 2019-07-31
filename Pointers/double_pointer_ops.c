@@ -6,6 +6,7 @@ void try_assign_double_pointer(int *single_ptr, int **double_ptr)
 {
     LOGGING_INFO("Try assign *double_ptr = value");
     *double_ptr = single_ptr;
+    LOGGING_INFO("Assign *double_ptr = single_ptr not yet crashed");
 }
 
 int main(int argc, char **argv)
