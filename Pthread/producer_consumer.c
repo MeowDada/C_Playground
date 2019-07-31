@@ -121,6 +121,8 @@ int main(int argc, char **argv)
         LOGGING_ERROR("Failed to create producer thread");
         return EXIT_FAILURE;
     }
+    void *status = NULL;
+    pthread_join(&producer_thread, &status);
 
     retval = pthread_create(&consumer_thread, NULL, consumer_stuff, (void *)buf);
     if (retval) {
