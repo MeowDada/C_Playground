@@ -18,7 +18,7 @@ static struct option long_options[] = {
 static const char *short_options = "L:l::dh";
 
 char        *log_file  = NULL;
-static int   log_level = LOG_LEVEL_ERROR; 
+static int   log_level = LOG_LEVEL_INFO;
 
 size_t       buffer_capacity  = 100;
 
@@ -28,7 +28,7 @@ int          num_gen_per_loop = 5;
 int          num_has_gen      = 0;
 int          num_has_read     = 0;
 
-pthread_mutex_t lock;
+sem_t mutex;
 
 void print_usage(const char *program_name)
 {
@@ -97,12 +97,12 @@ void *producer_stuff(void *_buf)
     int total_gen_num = num_gen;
 
     while (total_gen_num > 0) {
-        pthread_mutex_lock(&lock);
+        sem_wait(&mutex);
         if (buf->capacity - buf->size > 0) {
             int num_to_gen = rand() % num_gen_per_loop;
             num_to_gen = MIN(num_to_gen, buf->capacity - buf->size);
             if (num_to_gen == 0) {
-                pthread_mutex_unlock(&lock);
+                sem_post(&mutex);
                 continue;
             }
             LOGGING_INFO("[Producer] It's my turn, gonna generate %d numbers...", num_to_gen);
@@ -116,7 +116,7 @@ void *producer_stuff(void *_buf)
             total_gen_num -= num_to_gen;
             num_has_gen += num_to_gen;
         }
-        pthread_mutex_unlock(&lock);
+        sem_post(&mutex);
     }
 
     pthread_exit(NULL);
@@ -127,13 +127,13 @@ void *consumer_stuff(void *_buf)
     buf_t *buf = (buf_t *)_buf;
 
     while (num_has_read != num_gen) {
-        pthread_mutex_lock(&lock);
+        sem_wait(&mutex);
         if (buf->size > 0) {
             LOGGING_INFO("[Consumer] Current read num = %d, [num_has_gen,num_has_read] = [%03d,%03d]", buf->data[buf->size-1], num_has_gen, num_has_read);
             buf->size -= 1;
             num_has_read += 1;
         }
-        pthread_mutex_unlock(&lock);
+        sem_post(&mutex);
     }
 
     pthread_exit(NULL);
@@ -158,12 +158,7 @@ int main(int argc, char **argv)
     void *status = NULL;
     int retval = 0;
 
-    if (pthread_mutex_init(&lock, NULL) != 0) {
-        LOGGING_ERROR("Failed to create mutex");
-        return EXIT_FAILURE;
-    }
-
-
+    sem_init(&mutex, 0, 1);
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
@@ -183,7 +178,7 @@ int main(int argc, char **argv)
     /* pthread_join will block parent thread util the thread is finished */
     pthread_join(consumer_thread, &status);
     pthread_join(producer_thread, &status); 
-    pthread_mutex_destroy(&lock); 
+    sem_destroy(&mutex); 
     pthread_attr_destroy(&attr);
 
 
