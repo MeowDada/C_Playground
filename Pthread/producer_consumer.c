@@ -3,6 +3,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <time.h>
 #include "common.h"
 
