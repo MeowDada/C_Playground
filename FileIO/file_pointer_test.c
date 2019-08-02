@@ -28,7 +28,9 @@ static off_t get_buffer_size(FILE *fp)
 {
 #ifdef __linux__
     LOGGING_INFO("Buffer size = %lu", fp->_IO_buf_end - fp->_IO_buf_base);
-    return fp->_IO_buf_end - fp->_IO_buf_base;
+    off_t diff = fp->_IO_buf_end - fp->_IO_buf_base;
+    diff = diff > 0 ? diff : -diff;
+    return diff;
 #endif
     return 0;
 }
