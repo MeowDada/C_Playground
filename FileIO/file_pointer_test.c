@@ -6,8 +6,11 @@
 #include <sys/stat.h>
 #endif
 
-static void print_buffer_content(char *buffer)
+static void print_buffer_content(char *buffer, int end)
 {
+    if (end < 0)
+        end = 0;
+    buffer[end] = '\0';
     LOGGING_INFO("buffer_content = %s", buffer);
 }
 
@@ -128,9 +131,9 @@ int main(int argc, char **argv)
 
 
     retval = fread(buffer, 16, 1, fp);
-    LOGGING_INFO("[#%3d] fread(buffer, 16, 1, fp) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fread(buffer, 1, 16, fp) = %d", steps++, retval);
     print_all_info(fp);
-    print_buffer_content(buffer);
+    print_buffer_content(buffer, 16);
 
 end:
     close_logger(NULL);
