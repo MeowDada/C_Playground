@@ -102,6 +102,16 @@ int main(int argc, char **argv)
     LOGGING_INFO("[#%3d] fseek(fp, 4, SEEK_CUR) = %d", steps++, retval);
     print_all_info(fp);
 
+    retval = fseek(fp, 0, SEEK_SET);
+    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_SET) = %d", steps++, retval);
+    print_all_info(fp);
+
+
+    retval = fread(buffer, sizeof(char), 16, fp);
+    LOGGING_INFO("[#%3d] fread(buffer, sizeof(char), 16, fp) = %d", steps++, retval);
+    print_all_info(fp);
+    print_buffer_content(buffer, 16);
+
 #ifdef SEEK_HOLE
     retval = fseek(fp, 0, SEEK_HOLE);
     LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_HOLE) = %d", steps++, retval);
@@ -113,22 +123,6 @@ int main(int argc, char **argv)
     LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_DATA) = %d", steps++, retval);
     print_all_info(fp);
 #endif
-
-#ifdef SEEK_HOLE
-    retval = fseek(fp, 0, SEEK_HOLE);
-    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_HOLE) = %d", steps++, retval);
-    print_all_info(fp);
-#endif
-
-#ifdef SEEK_DATA
-    retval = fseek(fp, 0, SEEK_DATA);
-    LOGGING_INFO("[#%3d] fseekk(fp, 0, SEEK_DATA) = %d", steps++, retval);
-    print_all_info(fp);
-#endif
-    retval = fseek(fp, 0, SEEK_SET);
-    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_SET) = %d", steps++, retval);
-    print_all_info(fp);
-
 
     retval = fread(buffer, sizeof(char), 16, fp);
     LOGGING_INFO("[#%3d] fread(buffer, sizeof(char), 16, fp) = %d", steps++, retval);
