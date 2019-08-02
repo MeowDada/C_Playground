@@ -18,8 +18,8 @@ static off_t get_file_size(const char *fname)
 
 static void print_file_info(const char *fname, off_t fsize)
 {
-    LOGGING_INFO("File name = %20s", fname);
-    LOGGING_INFO("File size = %10ld", fsize);
+    LOGGING_INFO("File name = %-20s", fname);
+    LOGGING_INFO("File size = %-10ld", fsize);
 }
 
 static void print_all_info(FILE *fp)
@@ -60,34 +60,57 @@ int main(int argc, char **argv)
 
     print_file_info(fname, fsize);
 
-    LOGGING_INFO("[%3d] fseek(fp, 0, SEEK_SET);", steps++);
+    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_SET);", steps++);
     retval = fseek(fp, 0, SEEK_SET);
     print_all_info(fp);
 
-    LOGGING_INFO("[%3d]fseek(fp, 8, SEEK_SET);", steps++);
+    LOGGING_INFO("[#%3d]fseek(fp, 8, SEEK_SET);", steps++);
     retval = fseek(fp, 8, SEEK_SET);
     print_all_info(fp);
 
-    LOGGING_INFO("[%3d]feesk(fp, -8, SEEK_SET);", steps++);
+    LOGGING_INFO("[#%3d]feesk(fp, -8, SEEK_SET);", steps++);
     retval = fseek(fp, -8, SEEK_SET);
     print_all_info(fp);
 
-    LOGGING_INFO("[%3d]feesk(fp, 0, SEEK_END);", steps++);
+    LOGGING_INFO("[#%3d]feesk(fp, 0, SEEK_END);", steps++);
     retval = fseek(fp, 0, SEEK_END);
     print_all_info(fp);
 
-    LOGGING_INFO("[%3d]feesk(fp, -8, SEEK_END);", steps++);
+    LOGGING_INFO("[#%3d]feesk(fp, -8, SEEK_END);", steps++);
     retval = fseek(fp, -8, SEEK_END);
     print_all_info(fp);
 
-    LOGGING_INFO("[%3d]feesk(fp, 4, SEEK_SET);", steps++);
+    LOGGING_INFO("[#%3d]feesk(fp, 4, SEEK_SET);", steps++);
     retval = fseek(fp, 4, SEEK_SET);
     print_all_info(fp);
 
-    LOGGING_INFO("[%3d]feesk(fp, 4, SEEK_CUR);", steps++);
+    LOGGING_INFO("[#%3d]feesk(fp, 4, SEEK_CUR);", steps++);
     retval = fseek(fp, 4, SEEK_CUR);
     print_all_info(fp);
-    
+
+#ifdef SEEK_HOLE
+    LOGGING_INFO("[#%3d]feesk(fp, 0, SEEK_HOLE);", steps++);
+    retval = fseek(fp, 0, SEEK_HOLE);
+    print_all_info(fp);
+#endif
+
+#ifdef SEEK_DATA
+    LOGGING_INFO("[#%3d]feesk(fp, 0, SEEK_DATA);", steps++);
+    retval = fseek(fp, 0, SEEK_DATA);
+    print_all_info(fp);
+#endif
+
+#ifdef SEEK_HOLE
+    LOGGING_INFO("[#%3d]feesk(fp, 0, SEEK_HOLE);", steps++);
+    retval = fseek(fp, 0, SEEK_HOLE);
+    print_all_info(fp);
+#endif
+
+#ifdef SEEK_DATA
+    LOGGING_INFO("[#%3d]feesk(fp, 0, SEEK_DATA);", steps++);
+    retval = fseek(fp, 0, SEEK_DATA);
+    print_all_info(fp);
+#endif
 
 end:
     close_logger(NULL);
