@@ -36,8 +36,8 @@ int main(int argc, char **argv)
     retval = fseek(fp, 0, SEEK_SET);
     print_all_info(fp);
 
-    LOGGING_INFO("[%3d]fseekk(fp, 8, SEEK_SET);", steps++);
-    retval = fseekk(fp, 8, SEEK_SET);
+    LOGGING_INFO("[%3d]fseek(fp, 8, SEEK_SET);", steps++);
+    retval = fseek(fp, 8, SEEK_SET);
     print_all_info(fp);
 
     LOGGING_INFO("[%3d]feesk(fp, 8, SEEK_SET);", steps++);
