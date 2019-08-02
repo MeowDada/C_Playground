@@ -16,13 +16,11 @@ CLEAN_TARGET				:= $(PROGRESS_BAR_PROG) $(CONSOLE_TEMPLATE_PROG)
 
 build_progress_bar:
 	$(CC) -o $(PROGRESS_BAR_PROG) $(PROGRESS_BAR_SRCS)
-
 build_console_template:
 	$(CC) -o $(CONSOLE_TEMPLATE_PROG) $(CONSOLE_TEMPLATE_SRCS) -I $(INCLUDE_PATH) -L $(LIBRARY_PATH) -l $(CONSOLE_TEMPLATE_DEPENDENCY)
-
-all:
-	build_progress_bar
-	build_console_template
+all:\
+build_progress_bar\
+build_console_template
 
 clean:
 	rm -rf $(CLEAN_TARGET)
