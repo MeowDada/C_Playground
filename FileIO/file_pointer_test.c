@@ -6,6 +6,11 @@
 #include <sys/stat.h>
 #endif
 
+static void print_buffer_content(char *buffer)
+{
+    LOGGING_INFO("buffer_content = %s", buffer);
+}
+
 static off_t get_file_size(const char *fname)
 {
 #if __linux__
@@ -43,7 +48,13 @@ static void print_all_info(FILE *fp)
 
 int main(int argc, char **argv)
 {
+    size_t buf_size = 128;
     const char *fname = "lorem.txt";
+    char *buffer = (char *)malloc(buf_size);
+    if (!buffer) {
+        fprintf(stderr, "Failed to malloc for the creating buffer");
+        return EXIT_FAILURE;
+    }
 
     setup_logger(NULL, LOG_LEVEL_INFO);
 
@@ -69,11 +80,11 @@ int main(int argc, char **argv)
     print_all_info(fp);
 
     retval = fseek(fp, -8, SEEK_SET);
-    LOGGING_INFO("[#%3d] feesk(fp, -8, SEEK_SET) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseek(fp, -8, SEEK_SET) = %d", steps++, retval);
     print_all_info(fp);
 
     retval = fseek(fp, 0, SEEK_END);
-    LOGGING_INFO("[#%3d] feesk(fp, 0, SEEK_END) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_END) = %d", steps++, retval);
     print_all_info(fp);
 
     retval = fseek(fp, -8, SEEK_END);
@@ -81,36 +92,45 @@ int main(int argc, char **argv)
     print_all_info(fp);
 
     retval = fseek(fp, 4, SEEK_SET);
-    LOGGING_INFO("[#%3d] feesk(fp, 4, SEEK_SET) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseek(fp, 4, SEEK_SET) = %d", steps++, retval);
     print_all_info(fp);
 
     retval = fseek(fp, 4, SEEK_CUR);
-    LOGGING_INFO("[#%3d] feesk(fp, 4, SEEK_CUR) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseek(fp, 4, SEEK_CUR) = %d", steps++, retval);
     print_all_info(fp);
 
 #ifdef SEEK_HOLE
     retval = fseek(fp, 0, SEEK_HOLE);
-    LOGGING_INFO("[#%3d] feesk(fp, 0, SEEK_HOLE) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_HOLE) = %d", steps++, retval);
     print_all_info(fp);
 #endif
 
 #ifdef SEEK_DATA
     retval = fseek(fp, 0, SEEK_DATA);
-    LOGGING_INFO("[#%3d] feesk(fp, 0, SEEK_DATA) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_DATA) = %d", steps++, retval);
     print_all_info(fp);
 #endif
 
 #ifdef SEEK_HOLE
     retval = fseek(fp, 0, SEEK_HOLE);
-    LOGGING_INFO("[#%3d] feesk(fp, 0, SEEK_HOLE) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_HOLE) = %d", steps++, retval);
     print_all_info(fp);
 #endif
 
 #ifdef SEEK_DATA
     retval = fseek(fp, 0, SEEK_DATA);
-    LOGGING_INFO("[#%3d] feesk(fp, 0, SEEK_DATA) = %d", steps++, retval);
+    LOGGING_INFO("[#%3d] fseekk(fp, 0, SEEK_DATA) = %d", steps++, retval);
     print_all_info(fp);
 #endif
+    retval = fseek(fp, 0, SEEK_SET);
+    LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_SET) = %d", steps++, retval);
+    print_all_info(fp);
+
+
+    retval = fread(buffer, 16, 1, fp);
+    LOGGING_INFO("[#%3d] fread(buffer, 16, 1, fp) = %d", steps++, retval);
+    print_all_info(fp);
+    print_buffer_content(buffer);
 
 end:
     close_logger(NULL);
