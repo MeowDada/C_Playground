@@ -130,7 +130,7 @@ int main(int argc, char **argv)
     print_all_info(fp);
 
 
-    retval = fread(buffer, 16, 1, fp);
+    retval = fread(buffer, sizeof(char), 16, fp);
     LOGGING_INFO("[#%3d] fread(buffer, 1, 16, fp) = %d", steps++, retval);
     print_all_info(fp);
     print_buffer_content(buffer, 16);
