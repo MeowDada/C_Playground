@@ -13,7 +13,8 @@
 extern FILE  *_default_log_stream;
 extern int    _default_log_level;
 
-int setup_logger(FILE* fd, int log_level);
+int  setup_logger(FILE *fd, int log_level);
+void close_logger(FILE *fd);
 
 void log_msg(void *zc, int level, const char *file, int line, const char *func, 
     const char *format, ...);

@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 CC                := gcc
-CCFLAGS           := -lpthread -lrt
+CCFLAGS           := -pthread
 
 INCLUDE_PATH				:= ../common
 LIBRARY_PATH				:= ../lib

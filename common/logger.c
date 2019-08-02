@@ -26,6 +26,12 @@ int setup_logger(FILE *fd, int log_level)
     return 0;
 }
 
+void close_logger(FILE *fd)
+{
+    if (fd)
+        fclose(fd);
+}
+
 #if defined(__MINGW32__)
 static void logging_to_file(FILE *fp, int level, char *msg)
 {
