@@ -52,6 +52,7 @@ static void print_all_info(FILE *fp)
 int main(int argc, char **argv)
 {
     size_t buf_size = 128;
+    char *get_val = NULL;
     const char *fname = "lorem.txt";
     char *buffer = (char *)malloc(buf_size);
     if (!buffer) {
@@ -128,6 +129,10 @@ int main(int argc, char **argv)
     LOGGING_INFO("[#%3d] fread(buffer, sizeof(char), 16, fp) = %d", steps++, retval);
     print_all_info(fp);
     print_buffer_content(buffer, 16);
+
+    get_val = fgets(buffer, 16, fp);
+    LOGGING_INFO("[#%3d] fgets(buffer, 16, fp) = %s", steps++, get_val);
+    print_all_info(fp);
 
 end:
     close_logger(NULL);
