@@ -24,6 +24,15 @@ static off_t get_file_size(const char *fname)
 #endif
 }
 
+static off_t get_buffer_size(FILE *fp)
+{
+#ifdef __linux__
+    LOGGING_INFO("Buffer size = %lu", fp->_IO_buf_end - fp->_IO_buf_base);
+    return fp->_IO_buf_end - fp->_IO_buf_base;
+#endif
+    return 0;
+}
+
 static void print_file_info(const char *fname, off_t fsize)
 {
     LOGGING_INFO("File name = %-20s", fname);
@@ -74,6 +83,7 @@ int main(int argc, char **argv)
     off_t fsize = get_file_size(fname);
 
     print_file_info(fname, fsize);
+    off_t stream_buffer_size = get_buffer_size(fp);
 
     retval = fseek(fp, 0, SEEK_SET);
     LOGGING_INFO("[#%3d] fseek(fp, 0, SEEK_SET) = %d", steps++, retval);
