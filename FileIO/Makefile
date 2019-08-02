@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 CC      := gcc
-CCFLAGS := 
+CCFLAGS := -D_GNU_SOURCE
 
 PTR_STRUCT_FILE := ptr_struct_file
 BUFF_TYPE_TEST   := buff_type_test
