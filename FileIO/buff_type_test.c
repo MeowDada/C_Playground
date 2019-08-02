@@ -31,5 +31,5 @@ void pr_stdio(const char *name, FILE *fp)
         printf("line buffered");
     else
         printf("fully buffered or modified");
-    printf(", buffer size = %d\n", fp->_IO_buf_end - fp->_IO_buf_base);
+    printf(", buffer size = %ld\n", fp->_IO_buf_end - fp->_IO_buf_base);
 }
