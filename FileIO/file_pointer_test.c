@@ -43,7 +43,7 @@ static void print_all_info(FILE *fp)
 
 int main(int argc, char **argv)
 {
-    const char fname = "lorem.txt";
+    const char *fname = "lorem.txt";
 
     setup_logger(NULL, LOG_LEVEL_INFO);
 
