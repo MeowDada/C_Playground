@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 
     setup_logger(NULL, LOG_LEVEL_INFO);
 
-    FILE *fp = fopen(fname, "r");
+    FILE *fp = fopen(fname, "r+");
     if (!fp) {
         LOGGING_ERROR("Failed to find lorem.txt in this dir...");
         goto end;
