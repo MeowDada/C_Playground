@@ -152,7 +152,7 @@ static void *do_produce(void *args)
 
         if (buffer->size < buffer->capacity) {
             int number = produce_item(buffer);
-            LOGGING_INFO("%s[Producer]%s thread#%lu : produce %d, buffer->num_gen = %d", red, reset, tid, number, buffer->num_gen);
+            LOGGING_INFO("%s[Producer]%s thread#%lu : produce %3d, buffer->num_gen = %4d", red, reset, tid, number, buffer->num_gen);
         }
         else {
             LOGGING_INFO("%s[Producer]%s thread#%lu : buffer is full, wait consumer to consume...", red, reset, tid);
@@ -189,7 +189,7 @@ static void *do_consume(void *args)
 
         if (buffer->size > 0) {
             int number = consume_item(buffer);
-            LOGGING_INFO("%s[Consumer]%s thread#%lu : consume %d, buffer->num_con = %d", yellow, reset, tid, number, buffer->num_con);
+            LOGGING_INFO("%s[Consumer]%s thread#%lu : consume %3d, buffer->num_con = %4d", yellow, reset, tid, number, buffer->num_con);
         }
         else {
             LOGGING_INFO("%s[Consumer]%s thread#%lu : buffer is empty, waiting producer to produce items...", yellow, reset, tid);
