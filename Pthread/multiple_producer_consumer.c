@@ -58,8 +58,8 @@ static buffer_t *buffer_create(size_t capacity, int available)
     buffer->num_con  = 0;
 
     sem_init(&buffer->mutex, 0, 1);
-    sem_init(&buffer->empty, 0, 0);
-    sem_init(&buffer->full,  0, available);
+    sem_init(&buffer->full, 0, 0);
+    sem_init(&buffer->empty,  0, available);
 
     return buffer;
 }
@@ -190,7 +190,7 @@ static void *do_consume(void *args)
             LOGGING_INFO("[Consumer] thread#%lu : consume %d items, buffer->num_con = %d", tid, num_con, buffer->num_con);
         }
         else {
-            LOGGING_INFO("[Consumer] thread#%lu : buffer is empty, waiting producer to producer items...", tid);
+            LOGGING_INFO("[Consumer] thread#%lu : buffer is empty, waiting producer to produce items...", tid);
         }
 
         sem_post(&buffer->mutex);
