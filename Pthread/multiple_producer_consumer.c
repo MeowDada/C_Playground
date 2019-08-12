@@ -38,7 +38,7 @@ int max_generate = 100;
 static buffer_t *buffer_create(size_t capacity, int available)
 {
     buffer_t *buffer = (buffer_t *)malloc(sizeof(buffer_t));
-    if (!buffer_t) {
+    if (!buffer) {
         LOGGING_ERROR("failed to create buffer");
         return NULL;
     }
@@ -56,9 +56,9 @@ static buffer_t *buffer_create(size_t capacity, int available)
     buffer->num_gen  = 0;
     buffer->num_con  = 0;
 
-    sem_init(&buffer->mutex, 1);
-    sem_init(&buffer->empty, 0);
-    sem_init(&buffer->full,  available);
+    sem_init(&buffer->mutex, 0, 1);
+    sem_init(&buffer->empty, 0, 0);
+    sem_init(&buffer->full,  0, available);
 }
 
 static void buffer_destroy(buffer_t *buffer)
@@ -94,7 +94,7 @@ static thread_info_t *threads_create(int num_pthread, const pthread_attr_t *attr
         handle_t *handle = (handle_t *)malloc(sizeof(handle_t));
         if (!handle)
             return NULL;
-        handle->thread_info = threads[i];
+        handle->thread_info = &threads[i];
         handle->buffer = (buffer_t *)args
 
         retval = pthread_create(&threads[i].thread, attr, routine, (void *)handle);
@@ -114,13 +114,13 @@ static void *do_produce(void *args)
 
     while (1)
     {
-        sem_wait(buffer->empty);
-        sem_wait(buffer->mutex);
+        sem_wait(&buffer->empty);
+        sem_wait(&buffer->mutex);
 
         if (max_generate == buffer->num_gen) {
             LOGGING_INFO("[Producer] thread#%d : reach the limit of generateing times, exiting...");
-            sem_post(buffer->mutex);
-            sem_post(buffer->full);
+            sem_post(&buffer->mutex);
+            sem_post(&buffer->full);
             break;
         }
 
@@ -145,8 +145,8 @@ static void *do_produce(void *args)
             LOGGING_INFO("[Producer] thread#%d : buffer is full, wait consumer to consume...", (int)thread_info->thread);
         }
 
-        sem_post(buffer->mutex);
-        sem_post(buffer->full);
+        sem_post(&buffer->mutex);
+        sem_post(&buffer->full);
     }
 
     pthread_exit(&thread_info->thread);
@@ -161,13 +161,13 @@ static void *do_consume(void *args)
 
     while (1)
     {
-        sem_wait(buffer->full);
-        sem_wait(buffer->mutex);
+        sem_wait(&buffer->full);
+        sem_wait(&buffer->mutex);
 
         if (buffer->num_con == max_generate) {
             LOGGING_INFO("[Consumer] thread#%d : Already consume all generated number, let's exit consumer...", (int)thread_info->thread);
-            sem_post(buffer->mutex);
-            sem_post(buffer->empty);
+            sem_post(&buffer->mutex);
+            sem_post(&buffer->empty);
             break;
         }
 
@@ -188,8 +188,8 @@ static void *do_consume(void *args)
             LOGGING_INFO("[Consumer] thread#%d : buffer is empty, waiting producer to producer items...", (int)thread_info->thread);
         }
 
-        sem_post(buffer->mutex);
-        sem_post(buffer->empty);
+        sem_post(&buffer->mutex);
+        sem_post(&buffer->empty);
     }
     pthread_exit(&thread_info->thread);
     free(handle);
@@ -221,13 +221,13 @@ int main(int argc, char **argv)
     if (!buffer)
         return EXIT_FAILURE;
     
-    thread_info *producers = threads_create(num_producer, NULL, do_produce, (void *)buffer);
+    thread_info_t *producers = threads_create(num_producer, NULL, do_produce, (void *)buffer);
     if (!producers) {
         LOGGING_ERROR("failed to create producers");
         goto fail;
     }
 
-    thread_info *consumers = threads_create(num_consumer, NULL, do_consume, (void *)buffer);
+    thread_info_t *consumers = threads_create(num_consumer, NULL, do_consume, (void *)buffer);
     if (!consumers) {
         LOGGING_ERROR("failed to create consumers");
         goto fail;
@@ -235,12 +235,13 @@ int main(int argc, char **argv)
 
     while (1)
     {
-        sem_wait(buffer->mutex);
+        sem_wait(&buffer->mutex);
         if (buffer->num_con == max_generate && buffer->num_gen) {
             LOGGING_INFO("All of the producers and consumers have finished thier jobs, let's exiting...");
+            sem_post(&buffer->mutex);
             break;
         }
-        sem_post(buffer->mutex);
+        sem_post(&buffer->mutex);
     }
 
     free(producers);
