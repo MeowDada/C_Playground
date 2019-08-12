@@ -249,7 +249,7 @@ int main(int argc, char **argv)
     while (1)
     {
         sem_wait(&buffer->mutex);
-        if (buffer->num_con == max_generate && buffer->num_gen) {
+        if (buffer->num_con == max_generate && buffer->num_gen == max_generate) {
             LOGGING_INFO("All of the producers and consumers have finished thier jobs, let's exiting...");
             sem_post(&buffer->mutex);
             break;
