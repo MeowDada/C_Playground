@@ -35,6 +35,7 @@ typedef struct handle_t {
 int max_generate = 100;
 
 static const char *red    = "\033[1;31m";
+static const char *green  = "\033[0;32m";
 static const char *yellow = "\033[1;33m";
 static const char *reset  = "\033[0m"; 
 
@@ -125,7 +126,7 @@ static int consume_item(buffer_t *buffer)
 {
     buffer->size -= 1;
     buffer->dataptr -= 1;
-    buffer->num_con -= 1;
+    buffer->num_con += 1;
     int number = *buffer->dataptr;
     return number;
 }
@@ -178,7 +179,7 @@ static void *do_consume(void *args)
         sem_wait(&buffer->mutex);
 
         if (buffer->num_con == max_generate) {
-            LOGGING_INFO("[Consumer] thread#%lu : Already consume all generated number, let's exit consumer...", tid);
+            LOGGING_INFO("%s[Consumer]%s thread#%lu : Already consume all generated number, let's exit consumer...", yellow, reset, tid);
             sem_post(&buffer->mutex);
             sem_post(&buffer->empty);
             break;
@@ -188,10 +189,10 @@ static void *do_consume(void *args)
 
         if (buffer->size > 0) {
             int number = consume_item(buffer);
-            LOGGING_INFO("[Consumer] thread#%lu : consume %d, buffer->num_con = %d", tid, number, buffer->num_con);
+            LOGGING_INFO("%s[Consumer]%s thread#%lu : consume %d, buffer->num_con = %d", yellow, reset, tid, number, buffer->num_con);
         }
         else {
-            LOGGING_INFO("[Consumer] thread#%lu : buffer is empty, waiting producer to produce items...", tid);
+            LOGGING_INFO("%s[Consumer]%s thread#%lu : buffer is empty, waiting producer to produce items...", yellow, reset, tid);
         }
 
         sem_post(&buffer->mutex);
