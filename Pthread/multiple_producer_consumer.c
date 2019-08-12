@@ -199,7 +199,7 @@ static void *do_consume(void *args)
 int main(int argc, char **argv)
 {
     if (argc != 5) {
-        fprintf(stderr, "Usage: %s <num_producer> <num_consumer> <buffer_capacity> <num_generate>", argv[0]);
+        fprintf(stderr, "Usage: %s <num_producer> <num_consumer> <buffer_capacity> <num_generate>\n", argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -208,7 +208,7 @@ int main(int argc, char **argv)
     const size_t capacity     = atoi(argv[3]);
     max_generate = atoi(argv[4]);
 
-    setup_logger(stderr, LOG_LEVEL_INFO);
+    setup_logger(NULL, LOG_LEVEL_INFO);
 
     srand(time(NULL));
 
