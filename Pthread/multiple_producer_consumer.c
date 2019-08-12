@@ -198,17 +198,22 @@ static void *do_consume(void *args)
 
 int main(int argc, char **argv)
 {
-    if (argc != 5) {
-        fprintf(stderr, "Usage: %s <num_producer> <num_consumer> <buffer_capacity> <num_generate>\n", argv[0]);
+    if (argc != 6) {
+        fprintf(stderr, "Usage: %s <log_fname> <num_producer> <num_consumer> <buffer_capacity> <num_generate>\n", argv[0]);
         return EXIT_FAILURE;
     }
 
-    const int    num_producer = atoi(argv[1]);
-    const int    num_consumer = atoi(argv[2]);
-    const size_t capacity     = atoi(argv[3]);
-    max_generate = atoi(argv[4]);
+    const char  *log_fname    = argv[1];
+    const int    num_producer = atoi(argv[2]);
+    const int    num_consumer = atoi(argv[3]);
+    const size_t capacity     = atoi(argv[4]);
+    max_generate = atoi(argv[5]);
 
-    setup_logger(NULL, LOG_LEVEL_INFO);
+    FILE *fp = fopen(log_fname, "w+");
+    if (!fp)
+        return EXIT_FAILURE;
+
+    setup_logger(fp, LOG_LEVEL_DEBUG);
 
     srand(time(NULL));
 
