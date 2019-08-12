@@ -107,7 +107,7 @@ static thread_info_t *threads_create(int num_pthread, pthread_attr_t *attr,
         if (retval) {
             return NULL;
         }
-        retval = pthread_detach(&threads[i].thread);
+        retval = pthread_detach(threads[i].thread);
         if (retval) {
             return NULL;
         }
