@@ -208,15 +208,11 @@ int main(int argc, char **argv)
     const size_t capacity     = atoi(argv[4]);
     max_generate = atoi(argv[5]);
 
-    fprintf(stderr, "start fopen");
-
     FILE *fp = fopen(log_fname, "w+");
     if (!fp)
         return EXIT_FAILURE;
 
     setup_logger(fp, LOG_LEVEL_DEBUG);
-
-    fprintf(stderr, "setup logger succeed");
 
     srand(time(NULL));
 
@@ -227,8 +223,11 @@ int main(int argc, char **argv)
     }
 
     buffer_t *buffer = buffer_create(capacity, num_producer+num_consumer);
-    if (!buffer)
+    if (!buffer) {
+        LOGGING_ERROR("failed to create buffer");
+        close_logger(fp);
         return EXIT_FAILURE;
+    }
     
     thread_info_t *producers = threads_create(num_producer, NULL, do_produce, (void *)buffer);
     if (!producers) {
