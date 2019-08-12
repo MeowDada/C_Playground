@@ -257,7 +257,7 @@ end:
     buffer_destroy(buffer);
     buffer = NULL;
 
-    close_logger(NULL);
+    close_logger(fp);
 
     return 0;
 
@@ -265,7 +265,7 @@ fail:
     buffer_destroy(buffer);
     buffer = NULL;
 
-    close_logger(NULL);
+    close_logger(fp);
 
     return EXIT_FAILURE;
 }
