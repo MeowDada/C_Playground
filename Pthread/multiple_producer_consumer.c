@@ -34,6 +34,10 @@ typedef struct handle_t {
 
 int max_generate = 100;
 
+static const char *red    = "\033[1;31m";
+static const char *yellow = "\033[1;33m";
+static const char *reset  = "\033[0m"; 
+
 static buffer_t *buffer_create(int capacity)
 {
     buffer_t *buffer = (buffer_t *)malloc(sizeof(buffer_t));
@@ -113,6 +117,7 @@ static int produce_item(buffer_t *buffer)
     memcpy(buffer->dataptr, &number, sizeof(int));
     buffer->size += 1;
     buffer->dataptr += 1;
+    buffer->num_gen += 1;
     return number;
 }
 
@@ -120,6 +125,7 @@ static int consume_item(buffer_t *buffer)
 {
     buffer->size -= 1;
     buffer->dataptr -= 1;
+    buffer->num_con -= 1;
     int number = *buffer->dataptr;
     return number;
 }
@@ -137,7 +143,7 @@ static void *do_produce(void *args)
         sem_wait(&buffer->mutex);
 
         if (max_generate == buffer->num_gen) {
-            LOGGING_INFO("[Producer] thread#%lu : reach the limit of generateing times, exiting...", tid);
+            LOGGING_INFO("%s[Producer]%s thread#%lu : reach the limit of generateing times, exiting...", red, reset, tid);
             sem_post(&buffer->mutex);
             sem_post(&buffer->full);
             break;
@@ -145,10 +151,10 @@ static void *do_produce(void *args)
 
         if (buffer->size < buffer->capacity) {
             int number = produce_item(buffer);
-            LOGGING_INFO("[Producer] thread#%lu: produce %d, buffer->num_gen = %d", tid, number, buffer->num_gen);
+            LOGGING_INFO("%s[Producer]%s thread#%lu : produce %d, buffer->num_gen = %d", red, reset, tid, number, buffer->num_gen);
         }
         else {
-            LOGGING_INFO("[Producer] thread#%lu : buffer is full, wait consumer to consume...", tid);
+            LOGGING_INFO("%s[Producer]%s thread#%lu : buffer is full, wait consumer to consume...", red, reset, tid);
         }
 
         sem_post(&buffer->mutex);
