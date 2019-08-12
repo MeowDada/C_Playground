@@ -162,6 +162,7 @@ static void *do_consume(void *args)
     handle_t *handle = (handle_t *)args;
     buffer_t *buffer = handle->buffer;
     thread_info_t *thread_info = handle->thread_info;
+    int tid = gettid();
 
     while (1)
     {
