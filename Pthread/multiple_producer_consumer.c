@@ -4,6 +4,7 @@
 #include <time.h>
 #include <semaphore.h>
 #include <pthread.h>
+#include "common.h"
 #include "logger.h"
 
 #define DEFAULT_GENERATE_NUMBER_RANGE        (100)
@@ -77,7 +78,7 @@ static void buffer_destroy(buffer_t *buffer)
     sem_destroy(&buffer->full);
 }
 
-static thread_info_t *threads_create(int num_pthread, const pthread_attr_t *attr,
+static thread_info_t *threads_create(int num_pthread, pthread_attr_t *attr,
     void *(*routine)(void *), void *args)
 {
     thread_info_t *threads = (thread_info_t *)calloc(num_pthread, sizeof(thread_info_t));
@@ -95,7 +96,7 @@ static thread_info_t *threads_create(int num_pthread, const pthread_attr_t *attr
         if (!handle)
             return NULL;
         handle->thread_info = &threads[i];
-        handle->buffer = (buffer_t *)args
+        handle->buffer = (buffer_t *)args;
 
         retval = pthread_create(&threads[i].thread, attr, routine, (void *)handle);
         if (retval) {
