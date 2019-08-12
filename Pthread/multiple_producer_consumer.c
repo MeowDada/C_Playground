@@ -5,7 +5,6 @@
 #include <semaphore.h>
 #include <pthread.h>
 #include "common.h"
-#include "logger.h"
 
 #define DEFAULT_GENERATE_NUMBER_RANGE        (100)
 #define PRODUCER_MAX_GENERATE_ITEM_PER_ROUND (7)
