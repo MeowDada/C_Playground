@@ -219,7 +219,7 @@ int main(int argc, char **argv)
 
     if (num_consumer <= 0 || num_producer <= 0 || max_generate < 0) {
         LOGGING_ERROR("Invalid input");
-        close_logger(NULL);
+        close_logger(fp);
         return EXIT_FAILURE;
     }
 

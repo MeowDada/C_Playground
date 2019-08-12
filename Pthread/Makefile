@@ -26,3 +26,4 @@ build_multiple_producer_consumer:
 
 clean:
 	rm -rf $(CLEAN_TARGET)
+	rm -rf *.log
