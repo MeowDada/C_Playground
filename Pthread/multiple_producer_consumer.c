@@ -59,6 +59,8 @@ static buffer_t *buffer_create(size_t capacity, int available)
     sem_init(&buffer->mutex, 0, 1);
     sem_init(&buffer->empty, 0, 0);
     sem_init(&buffer->full,  0, available);
+
+    return buffer;
 }
 
 static void buffer_destroy(buffer_t *buffer)
