@@ -8,16 +8,14 @@
 #include "common.h"
 
 #define DEFAULT_GENERATE_NUMBER_RANGE        (100)
-#define PRODUCER_MAX_GENERATE_ITEM_PER_ROUND (7)
-#define CONSUMER_MAX_CONSUME_ITEM_PER_ROUND  (5)
 
 typedef struct buffer_t {
     unsigned int   num_gen;
     unsigned int   num_con;
     size_t         capacity;
     size_t         size;
-    unsigned char *data;
-    unsigned char *dataptr;
+    int           *data;
+    int           *dataptr;
     sem_t          mutex;
     sem_t          empty;
     sem_t          full;
@@ -36,7 +34,7 @@ typedef struct handle_t {
 
 int max_generate = 100;
 
-static buffer_t *buffer_create(size_t capacity, int available)
+static buffer_t *buffer_create(int capacity)
 {
     buffer_t *buffer = (buffer_t *)malloc(sizeof(buffer_t));
     if (!buffer) {
@@ -44,14 +42,14 @@ static buffer_t *buffer_create(size_t capacity, int available)
         return NULL;
     }
 
-    buffer->data = (unsigned char *)malloc(capacity*sizeof(int));
+    buffer->data = (int *)malloc(capacity*sizeof(int));
     if (!buffer->data) {
         LOGGING_ERROR("failed to malloc buffer");
         free(buffer);
         return NULL;
     }
 
-    buffer->capacity = capacity;
+    buffer->capacity = (size_t)capacity;
     buffer->size     = 0;
     buffer->dataptr  = buffer->data;
     buffer->num_gen  = 0;
@@ -59,7 +57,7 @@ static buffer_t *buffer_create(size_t capacity, int available)
 
     sem_init(&buffer->mutex, 0, 1);
     sem_init(&buffer->full, 0, 0);
-    sem_init(&buffer->empty,  0, available);
+    sem_init(&buffer->empty,  0, capacity);
 
     return buffer;
 }
@@ -109,6 +107,23 @@ static thread_info_t *threads_create(int num_pthread, pthread_attr_t *attr,
     return threads;
 }
 
+static int produce_item(buffer_t *buffer)
+{
+    int number = rand() % DEFAULT_GENERATE_NUMBER_RANGE;
+    memcpy(buffer->dataptr, &number, sizeof(int));
+    buffer->size += 1;
+    buffer->dataptr += 1;
+    return number;
+}
+
+static int consume_item(buffer_t *buffer)
+{
+    buffer->size -= 1;
+    buffer->dataptr -= 1;
+    int number = *buffer->dataptr;
+    return number;
+}
+
 static void *do_produce(void *args)
 {
     handle_t *handle = (handle_t *)args;
@@ -128,22 +143,9 @@ static void *do_produce(void *args)
             break;
         }
 
-        int num_gen = 0;
-
         if (buffer->size < buffer->capacity) {
-            num_gen = rand() % PRODUCER_MAX_GENERATE_ITEM_PER_ROUND;
-            num_gen = min(num_gen, buffer->capacity - buffer->size);
-            num_gen = min(num_gen, max_generate - buffer->num_gen);
-            int i = 0;
-            int number = 0;
-            for (i = 0; i < num_gen; i++) {
-                number = rand() % DEFAULT_GENERATE_NUMBER_RANGE;
-                memcpy(buffer->dataptr, &number, sizeof(int));
-                buffer->dataptr += sizeof(int);
-            }
-            buffer->size += num_gen;
-            buffer->num_gen += num_gen;
-            LOGGING_INFO("[Producer] thread#%lu: produce %d items, buffer->num_gen = %d", tid, num_gen, buffer->num_gen);
+            int number = produce_item(buffer);
+            LOGGING_INFO("[Producer] thread#%lu: produce %d, buffer->num_gen = %d", tid, number, buffer->num_gen);
         }
         else {
             LOGGING_INFO("[Producer] thread#%lu : buffer is full, wait consumer to consume...", tid);
@@ -179,15 +181,8 @@ static void *do_consume(void *args)
         int num_con = 0;
 
         if (buffer->size > 0) {
-            num_con = rand() % CONSUMER_MAX_CONSUME_ITEM_PER_ROUND;
-            num_con = min(num_con, buffer->size);
-            int i = 0;
-            for (i = 0; i < num_con ; i++) {
-                buffer->dataptr -= sizeof(int);
-            }
-            buffer->size -= num_con;
-            buffer->num_con += num_con;
-            LOGGING_INFO("[Consumer] thread#%lu : consume %d items, buffer->num_con = %d", tid, num_con, buffer->num_con);
+            int number = consume_item(buffer);
+            LOGGING_INFO("[Consumer] thread#%lu : consume %d, buffer->num_con = %d", tid, number, buffer->num_con);
         }
         else {
             LOGGING_INFO("[Consumer] thread#%lu : buffer is empty, waiting producer to produce items...", tid);
@@ -227,7 +222,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    buffer_t *buffer = buffer_create(capacity, num_producer+num_consumer);
+    buffer_t *buffer = buffer_create(capacity);
     if (!buffer) {
         LOGGING_ERROR("failed to create buffer");
         close_logger(fp);
