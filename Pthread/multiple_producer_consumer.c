@@ -114,7 +114,7 @@ static void *do_produce(void *args)
     handle_t *handle = (handle_t *)args;
     buffer_t *buffer = handle->buffer;
     thread_info_t *thread_info = handle->thread_info;
-    int tid = gettid();
+    unsigned long tid = pthread_self();
 
     while (1)
     {
@@ -122,7 +122,7 @@ static void *do_produce(void *args)
         sem_wait(&buffer->mutex);
 
         if (max_generate == buffer->num_gen) {
-            LOGGING_INFO("[Producer] thread#%d : reach the limit of generateing times, exiting...", tid);
+            LOGGING_INFO("[Producer] thread#%lu : reach the limit of generateing times, exiting...", tid);
             sem_post(&buffer->mutex);
             sem_post(&buffer->full);
             break;
@@ -143,10 +143,10 @@ static void *do_produce(void *args)
             }
             buffer->size += num_gen;
             buffer->num_gen += num_gen;
-            LOGGING_INFO("[Producer] thread#%d : produce %d items, buffer->num_gen = %d", tid, num_gen, buffer->num_gen);
+            LOGGING_INFO("[Producer] thread#%lu: produce %d items, buffer->num_gen = %d", tid, num_gen, buffer->num_gen);
         }
         else {
-            LOGGING_INFO("[Producer] thread#%d : buffer is full, wait consumer to consume...", tid);
+            LOGGING_INFO("[Producer] thread#%lu : buffer is full, wait consumer to consume...", tid);
         }
 
         sem_post(&buffer->mutex);
@@ -162,7 +162,7 @@ static void *do_consume(void *args)
     handle_t *handle = (handle_t *)args;
     buffer_t *buffer = handle->buffer;
     thread_info_t *thread_info = handle->thread_info;
-    int tid = gettid();
+    unsigned long tid = pthread_self();
 
     while (1)
     {
@@ -170,7 +170,7 @@ static void *do_consume(void *args)
         sem_wait(&buffer->mutex);
 
         if (buffer->num_con == max_generate) {
-            LOGGING_INFO("[Consumer] thread#%d : Already consume all generated number, let's exit consumer...", tid);
+            LOGGING_INFO("[Consumer] thread#%lu : Already consume all generated number, let's exit consumer...", tid);
             sem_post(&buffer->mutex);
             sem_post(&buffer->empty);
             break;
@@ -187,10 +187,10 @@ static void *do_consume(void *args)
             }
             buffer->size -= num_con;
             buffer->num_con += num_con;
-            LOGGING_INFO("[Consumer] thread#%d : consume %d items, buffer->num_con = %d", tid, num_con, buffer->num_con);
+            LOGGING_INFO("[Consumer] thread#%lu : consume %d items, buffer->num_con = %d", tid, num_con, buffer->num_con);
         }
         else {
-            LOGGING_INFO("[Consumer] thread#%d : buffer is empty, waiting producer to producer items...", tid);
+            LOGGING_INFO("[Consumer] thread#%lu : buffer is empty, waiting producer to producer items...", tid);
         }
 
         sem_post(&buffer->mutex);
