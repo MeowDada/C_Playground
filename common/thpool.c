@@ -5,12 +5,15 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <time.h>
 #include "thpool.h"
 
 static volatile int threads_keepalive;
 static volatile int threads_on_hold;
+
+typedef struct thpool_job_t thpool_job_t;
 
 typedef struct binary_semaphore_t {
     pthread_mutex_t mutex;
@@ -39,7 +42,7 @@ typedef struct thread_t {
 } thread_t;
 
 typedef struct thpool_t {
-    thread_t          *threads;
+    thread_t         **threads;
     volatile int       num_threads_alive;
     volatile int       num_threads_working;
     pthread_mutex_t    thcount_lock;
@@ -93,7 +96,7 @@ threadpool_t *thpool_init(int num_threads)
     thread_pool->threads = (thread_t **)calloc(num_threads, sizeof(thread_t *));
     if (!thread_pool->threads) {
         fprintf(stderr, "thpool_init(): Could not allocate memory for threads\n");
-        jobqueue_destroy(*thread_pool->job_queue);
+        jobqueue_destroy(&thread_pool->job_queue);
         free(thread_pool);
         return NULL;
     }
@@ -111,7 +114,7 @@ threadpool_t *thpool_init(int num_threads)
     return thread_pool;
 }
 
-int thpool_add_work(threadpool_t *thread_pool, void *(funcptr)(int, void *), void *args)
+int thpool_add_work(threadpool_t *thread_pool, void (*funcptr)(int, void *), void *args)
 {
     thpool_job_t *job = (thpool_job_t *)malloc(sizeof(thpool_job_t));
     if (!job) {
@@ -225,7 +228,7 @@ static int thread_init(threadpool_t *thread_pool, thread_t **thread, int id)
     (*thread)->id          = id;
 
     pthread_create(&(*thread)->pthread, &attr, (void *)thread_do, (*thread));
-    pthread_detach((*thread)->pthread));
+    pthread_detach((*thread)->pthread);
 
     ret = pthread_attr_destroy(&attr);
 
@@ -396,7 +399,7 @@ static void bsem_init(binary_semaphore_t *bsem, int value)
         exit(1);
     }
     pthread_mutex_init(&bsem->mutex, NULL);
-    pthread_cond_init(&bsem->cond), NULL);
+    pthread_cond_init(&bsem->cond, NULL);
     bsem->v = value;
 }
 
