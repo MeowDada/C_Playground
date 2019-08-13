@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     threadpool_t *thpool = thpool_init(8);
 
     int number = 0;
-    int limit  = 100;
+    int limit  = 1000;
 
     handle_t handle; 
     handle.number = number;
@@ -40,6 +40,8 @@ int main(int argc, char **argv)
     thpool_add_work(thpool, increment, &handle);
     thpool_add_work(thpool, increment, &handle);
     thpool_add_work(thpool, increment, &handle);
+
+    thpool_wait(thpool);
 
     close_logger(NULL);
 
