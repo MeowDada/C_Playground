@@ -38,7 +38,7 @@ typedef struct thpool_job_queue_t {
 typedef struct thread_t {
     int           id;
     pthread_t     pthread;
-    threadpool_t  thread_pool;
+    threadpool_t *thread_pool;
 } thread_t;
 
 typedef struct thpool_t {
@@ -377,7 +377,7 @@ static thpool_job_t *jobqueue_pull(thpool_job_queue_t *jobq)
             jobq->len   = 0;
             break;
         default:
-            jobq->front = jobq->prev;
+            jobq->front = job->prev;
             jobq->len--;
             bsem_post(jobq->bsem_has_job);
     }
