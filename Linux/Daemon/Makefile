@@ -8,7 +8,7 @@ SIMPLE_DAEMON_SRCS := simple_daemon.c
 SIMPLE_DAEMON_OBJS := $(patsubst %.c,%.o,$(SIMPLE_DAEMON_SRCS))
 
 SUB_DIRS           := $(wildcard */ */*/)
-SRCS_FILES         := $(wildcard $(addsuffix *.c,$(SUB_DIRS)))
+SRCS_FILES         := $(wildcard $(addsuffix *.c,$(SUB_DIRS))) $(wildcard *.c)
 OBJS_FILES         := $(patsubst %.c,%.o,$(SRCS_FILES))
 
 all: $(SRCS_FILES)
