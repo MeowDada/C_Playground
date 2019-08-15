@@ -15,6 +15,7 @@ int main(int argc, char **argv)
     /* Fork off the parenet process */
     pid = fork();
     if (pid < 0) {
+        fprintf(stderr, "failed to fork a child process\n");
         exit(EXIT_FAILURE);
     }
     if (pid > 0) {
@@ -29,11 +30,13 @@ int main(int argc, char **argv)
     /* Create a new SID for the child process */
     sid = setsid();
     if (sid < 0) {
+        fprintf(stderr, "daemon: faild to setsid()...\n");
         exit(EXIT_FAILURE);
     }
 
     /* Changing the working directory to the safe place */
     if ((chdir("/")) < 0) {
+        fprintf(stderr, "daemon: failed to chdir to /\n");
         exit(EXIT_FAILURE);
     }
 
