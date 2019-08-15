@@ -26,6 +26,9 @@ int main(int argc, char **argv)
     umask(0);
 
     /* Open any logs here */
+    openlog("simple daemon", LOG_PID, LOG_DAEMON);
+
+    /* Catch, ignore and handle signals */
 
     /* Create a new SID for the child process */
     sid = setsid();
@@ -50,8 +53,13 @@ int main(int argc, char **argv)
     /* The big loop */
     while (1) {
         /* Do some task here */
+        syslog(LOG_NOTICE, "simple daemon started.");
         sleep(30);
+        break;
     }
+
+    syslog(LOG_NOTICE, "simple daemon terminated.");
+    closelog();
 
     return 0;
 }
