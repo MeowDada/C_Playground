@@ -19,5 +19,5 @@ all: $(SRCS_FILES)
 	$(CC) $(CCFLAGS) -o $@ -c $<
 
 clean: $(SIMPLE_DAEMON_PROG)
-	rm -rf $@
+	rm -rf $^
 	rm -rf $(OBJS_FILES)
