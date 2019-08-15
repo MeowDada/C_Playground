@@ -12,7 +12,7 @@ SRCS_FILES         := $(wildcard $(addsuffix *.c,$(SUB_DIRS)))
 OBJS_FILES         := $(patsubst %.c,%.o,$(SRCS_FILES))
 
 all: $(SRCS_FILES)
-	$(CC) $(CCFLAGS) -c $@
+	$(CC) $(CCFLAGS) -c $^
 	$(CC) $(CCFLAGS) -o $(SIMPLE_DAEMON_PROG) $(SIMPLE_DAEMON_OBJS)
 
 %.o:%.c
