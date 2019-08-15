@@ -40,10 +40,10 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    /* Closing standard file descriptor */
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
+    /* Redirect stdin, stdout, stderr to /dev/null */
+    open("/dev/null", STDIN_FILENO);
+    open("/dev/null", STDOUT_FILENO);
+    open("/dev/null", STDERR_FILENO);
 
     /* Deamon specific initialization goes here */
 
