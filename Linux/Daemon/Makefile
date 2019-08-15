@@ -15,7 +15,6 @@ all: $(SRCS_FILES)
 	$(CC) $(CCFLAGS) -c $@
 	$(CC) $(CCFLAGS) -o $(SIMPLE_DAEMON_PROG) $(SIMPLE_DAEMON_OBJS)
 
-
 %.o:%.c
 	$(CC) $(CCFLAGS) -o $@ -c $<
 
