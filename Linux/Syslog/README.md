@@ -16,7 +16,7 @@ Ubuntu is recommanded. Other Linux platform should work ,too.
 make
 ```
 ### Run
-execute the syslog_example directly by command:
+Execute the syslog_example directly by command:
 ```
 ./syslog_example
 ```
