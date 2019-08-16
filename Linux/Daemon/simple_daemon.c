@@ -48,6 +48,11 @@ static void catch_signal()
     sigaddset(&sa.sa_mask, SIGINT);
     sigaddset(&sa.sa_mask, SIGSEGV);
     sigaddset(&sa.sa_mask, SIGTERM);
+
+    /* sigaction means to register and handle the signal */
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGSEGV, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
 }
 
 int main(int argc, char **argv)
