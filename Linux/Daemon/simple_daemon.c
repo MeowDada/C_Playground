@@ -43,8 +43,11 @@ static void catch_signal()
        means that sa.sa_handler will NOT be used */
     sa.sa_flags = SA_SIGINFO;
 
-    /* sa_mask specifies a mask of signals which should be blocked */
-    sa.sa_mask = 0;
+    /* sa_mask specifies a mask of signals which should be blocked during execution
+       of the signal handler*/
+    sigaddset(&sa.sa_mask, SIGINT);
+    sigaddset(&sa.sa_mask, SIGSEGV);
+    sigaddset(&sa.sa_mask, SIGTERM);
 }
 
 int main(int argc, char **argv)
