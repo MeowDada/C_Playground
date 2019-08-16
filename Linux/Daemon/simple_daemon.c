@@ -32,7 +32,7 @@ static void catch_signal()
     struct sigaction sa;
 
     /* To exclude all of the defined signals */
-    sigemptyset(&sa);
+    sigemptyset(&sa.sa_mask);
 
     /*  both sa.sa_sigaction (int, siginfo_t *, void *) and sa.sa_handler (int) 
         could be the signal handler function pointer, but DO NOT set both of them!
