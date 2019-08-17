@@ -31,4 +31,6 @@ void *incrementCounter()
 	counter++;
 	printf("Counter value: %d\n", counter);
 	pthread_mutex_unlock(&mutex);
+
+	return NULL;
 }
