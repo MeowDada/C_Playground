@@ -1,0 +1,12 @@
+# ignore link object files
+*
+
+# DO NOT ignore .c files\
+!Makefile
+!*.c
+!*.h
+!.gitignore
+!*.md
+!*.txt
+!*.sh
+!*.log
