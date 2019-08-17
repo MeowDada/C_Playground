@@ -27,7 +27,8 @@ int main(int argc, char** argv)
 	
 	printf("Thread 1 returns: %d\n", iret1);
     printf("Thread 2 returns: %d\n", iret2);
-    exit(0);	
+
+	return 0;
 }
 
 void *print_message_function(void *ptr)
@@ -35,4 +36,6 @@ void *print_message_function(void *ptr)
 	const char *message;
 	message = (const char*)ptr;
 	printf("%s\n", message);
+
+	return NULL;
 }

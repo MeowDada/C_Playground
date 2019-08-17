@@ -9,14 +9,14 @@ int main(int argc, char** argv)
 	
 	printf("num = %d\n", num);
 	printf("*ptr = %d\n", *ptr);
-	printf("ptr = %d\n", ptr);
+	printf("ptr = %p\n", ptr);
 	
 	printf("Then do free(ptr)\n");
 	free(ptr);
 	
 	printf("num = %d\n", num);
 	printf("CANNOT ACCESS *ptr\n");
-	printf("ptr = %d\n", ptr);
+	printf("ptr = %p\n", ptr);
 	
 	return 0;
 }

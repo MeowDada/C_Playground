@@ -1,0 +1,163 @@
+==00:00:00:00.000 31499== Memcheck, a memory error detector
+==00:00:00:00.000 31499== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==00:00:00:00.000 31499== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==00:00:00:00.000 31499== Command: ./oob_test
+==00:00:00:00.000 31499== Parent PID: 23686
+==00:00:00:00.000 31499== 
+--00:00:00:00.000 31499-- 
+--00:00:00:00.000 31499-- Valgrind options:
+--00:00:00:00.000 31499--    --tool=memcheck
+--00:00:00:00.000 31499--    --show-reachable=yes
+--00:00:00:00.000 31499--    --read-var-info=yes
+--00:00:00:00.000 31499--    --verbose
+--00:00:00:00.000 31499--    --error-limit=yes
+--00:00:00:00.000 31499--    --time-stamp=yes
+--00:00:00:00.000 31499--    --leak-check=full
+--00:00:00:00.000 31499--    --log-file=mycode.log
+--00:00:00:00.000 31499-- Contents of /proc/version:
+--00:00:00:00.000 31499--   Linux version 4.18.0-25-generic (buildd@lgw01-amd64-033) (gcc version 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)) #26~18.04.1-Ubuntu SMP Thu Jun 27 07:28:31 UTC 2019
+--00:00:00:00.000 31499-- 
+--00:00:00:00.000 31499-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-avx-avx2-bmi
+--00:00:00:00.000 31499-- Page sizes: currently 4096, max supported 4096
+--00:00:00:00.000 31499-- Valgrind library directory: /usr/lib/valgrind
+--00:00:00:00.001 31499-- Reading syms from /home/jack/Desktop/Repos/C_Playground/Valgrind/oob_test
+--00:00:00:00.003 31499-- Reading syms from /lib/x86_64-linux-gnu/ld-2.27.so
+--00:00:00:00.003 31499--   Considering /lib/x86_64-linux-gnu/ld-2.27.so ..
+--00:00:00:00.004 31499--   .. CRC mismatch (computed 1b7c895e wanted 2943108a)
+--00:00:00:00.004 31499--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.27.so ..
+--00:00:00:00.010 31499--   .. CRC is valid
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.270 31499-- warning: addVar: unknown size (loadcmds)
+--00:00:00:00.277 31499-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+--00:00:00:00.277 31499--   Considering /usr/lib/valgrind/memcheck-amd64-linux ..
+--00:00:00:00.287 31499--   .. CRC mismatch (computed c25f395c wanted 0a9602a8)
+--00:00:00:00.287 31499--    object doesn't have a symbol table
+--00:00:00:00.287 31499--    object doesn't have a dynamic symbol table
+--00:00:00:00.298 31499-- Scheduler: using generic scheduler lock implementation.
+--00:00:00:00.301 31499-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==00:00:00:00.303 31499== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-31499-by-jack-on-???
+==00:00:00:00.303 31499== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-31499-by-jack-on-???
+==00:00:00:00.303 31499== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-31499-by-jack-on-???
+==00:00:00:00.303 31499== 
+==00:00:00:00.303 31499== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==00:00:00:00.303 31499== don't want to do, unless you know exactly what you're doing,
+==00:00:00:00.303 31499== or are doing some strange experiment):
+==00:00:00:00.303 31499==   /usr/lib/valgrind/../../bin/vgdb --pid=31499 ...command...
+==00:00:00:00.303 31499== 
+==00:00:00:00.303 31499== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==00:00:00:00.303 31499==   /path/to/gdb ./oob_test
+==00:00:00:00.303 31499== and then give GDB the following command
+==00:00:00:00.303 31499==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=31499
+==00:00:00:00.303 31499== --pid is optional if only one valgrind process is running
+==00:00:00:00.303 31499== 
+--00:00:00:00.315 31499-- REDIR: 0x401f2f0 (ld-linux-x86-64.so.2:strlen) redirected to 0x58060901 (???)
+--00:00:00:00.332 31499-- REDIR: 0x401f0d0 (ld-linux-x86-64.so.2:index) redirected to 0x5806091b (???)
+--00:00:00:00.348 31499-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--00:00:00:00.348 31499--   Considering /usr/lib/valgrind/vgpreload_core-amd64-linux.so ..
+--00:00:00:00.348 31499--   .. CRC mismatch (computed 4b63d83e wanted 670599e6)
+--00:00:00:00.348 31499--    object doesn't have a symbol table
+--00:00:00:00.353 31499-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+--00:00:00:00.354 31499--   Considering /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so ..
+--00:00:00:00.354 31499--   .. CRC mismatch (computed a4b37bee wanted 8ad4dc94)
+--00:00:00:00.354 31499--    object doesn't have a symbol table
+==00:00:00:00.356 31499== WARNING: new redirection conflicts with existing -- ignoring it
+--00:00:00:00.356 31499--     old: 0x0401f2f0 (strlen              ) R-> (0000.0) 0x58060901 ???
+--00:00:00:00.356 31499--     new: 0x0401f2f0 (strlen              ) R-> (2007.0) 0x04c32db0 strlen
+--00:00:00:00.360 31499-- REDIR: 0x401d360 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c33ee0 (strcmp)
+--00:00:00:00.362 31499-- REDIR: 0x401f830 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c374f0 (mempcpy)
+--00:00:00:00.372 31499-- Reading syms from /lib/x86_64-linux-gnu/libc-2.27.so
+--00:00:00:00.373 31499--   Considering /lib/x86_64-linux-gnu/libc-2.27.so ..
+--00:00:00:00.381 31499--   .. CRC mismatch (computed b1c74187 wanted 042cc048)
+--00:00:00:00.381 31499--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.27.so ..
+--00:00:00:00.448 31499--   .. CRC is valid
+--00:00:00:04.304 31499-- REDIR: 0x4edac70 (libc.so.6:memmove) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.305 31499-- REDIR: 0x4ed9d40 (libc.so.6:strncpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.306 31499-- REDIR: 0x4edaf50 (libc.so.6:strcasecmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.306 31499-- REDIR: 0x4ed9790 (libc.so.6:strcat) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.306 31499-- REDIR: 0x4ed9d70 (libc.so.6:rindex) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.308 31499-- REDIR: 0x4edc7c0 (libc.so.6:rawmemchr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.308 31499-- REDIR: 0x4edade0 (libc.so.6:mempcpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.309 31499-- REDIR: 0x4edac10 (libc.so.6:bcmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.310 31499-- REDIR: 0x4ed9d00 (libc.so.6:strncmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.310 31499-- REDIR: 0x4ed9800 (libc.so.6:strcmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.311 31499-- REDIR: 0x4edad40 (libc.so.6:memset) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.311 31499-- REDIR: 0x4ef80f0 (libc.so.6:wcschr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.312 31499-- REDIR: 0x4ed9ca0 (libc.so.6:strnlen) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.312 31499-- REDIR: 0x4ed9870 (libc.so.6:strcspn) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.313 31499-- REDIR: 0x4edafa0 (libc.so.6:strncasecmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.313 31499-- REDIR: 0x4ed9840 (libc.so.6:strcpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.314 31499-- REDIR: 0x4edb0e0 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.315 31499-- REDIR: 0x4ed9da0 (libc.so.6:strpbrk) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.315 31499-- REDIR: 0x4ed97c0 (libc.so.6:index) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.315 31499-- REDIR: 0x4ed9c70 (libc.so.6:strlen) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.316 31499-- REDIR: 0x4ee46c0 (libc.so.6:memrchr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.316 31499-- REDIR: 0x4edaff0 (libc.so.6:strcasecmp_l) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.317 31499-- REDIR: 0x4edabe0 (libc.so.6:memchr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.317 31499-- REDIR: 0x4ef8eb0 (libc.so.6:wcslen) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.318 31499-- REDIR: 0x4eda050 (libc.so.6:strspn) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.318 31499-- REDIR: 0x4edaf20 (libc.so.6:stpncpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.318 31499-- REDIR: 0x4edaef0 (libc.so.6:stpcpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.319 31499-- REDIR: 0x4edc7f0 (libc.so.6:strchrnul) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.319 31499-- REDIR: 0x4edb040 (libc.so.6:strncasecmp_l) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--00:00:00:04.329 31499-- REDIR: 0x4fca3c0 (libc.so.6:__strrchr_avx2) redirected to 0x4c32730 (rindex)
+--00:00:00:04.339 31499-- REDIR: 0x4ed3070 (libc.so.6:malloc) redirected to 0x4c2faa0 (malloc)
+==00:00:00:04.340 31499== Invalid write of size 4
+==00:00:00:04.340 31499==    at 0x1086DB: main (oob_test.c:13)
+==00:00:00:04.340 31499==  Address 0x522d054 is 0 bytes after a block of size 20 alloc'd
+==00:00:00:04.340 31499==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==00:00:00:04.340 31499==    by 0x1086B0: main (oob_test.c:8)
+==00:00:00:04.340 31499== 
+==00:00:00:04.340 31499== Invalid read of size 4
+==00:00:00:04.340 31499==    at 0x1086E5: main (oob_test.c:15)
+==00:00:00:04.340 31499==  Address 0x522d054 is 0 bytes after a block of size 20 alloc'd
+==00:00:00:04.340 31499==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==00:00:00:04.340 31499==    by 0x1086B0: main (oob_test.c:8)
+==00:00:00:04.340 31499== 
+--00:00:00:04.341 31499-- REDIR: 0x4fca1d0 (libc.so.6:__strchrnul_avx2) redirected to 0x4c37020 (strchrnul)
+--00:00:00:04.349 31499-- REDIR: 0x4fcaab0 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4c37130 (mempcpy)
+--00:00:00:04.366 31499-- REDIR: 0x4ed3950 (libc.so.6:free) redirected to 0x4c30cd0 (free)
+==00:00:00:04.372 31499== 
+==00:00:00:04.372 31499== HEAP SUMMARY:
+==00:00:00:04.372 31499==     in use at exit: 20 bytes in 1 blocks
+==00:00:00:04.372 31499==   total heap usage: 2 allocs, 1 frees, 1,044 bytes allocated
+==00:00:00:04.372 31499== 
+==00:00:00:04.372 31499== Searching for pointers to 1 not-freed blocks
+==00:00:00:04.373 31499== Checked 70,280 bytes
+==00:00:00:04.373 31499== 
+==00:00:00:04.373 31499== 20 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==00:00:00:04.373 31499==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==00:00:00:04.373 31499==    by 0x1086B0: main (oob_test.c:8)
+==00:00:00:04.373 31499== 
+==00:00:00:04.373 31499== LEAK SUMMARY:
+==00:00:00:04.373 31499==    definitely lost: 20 bytes in 1 blocks
+==00:00:00:04.373 31499==    indirectly lost: 0 bytes in 0 blocks
+==00:00:00:04.373 31499==      possibly lost: 0 bytes in 0 blocks
+==00:00:00:04.373 31499==    still reachable: 0 bytes in 0 blocks
+==00:00:00:04.373 31499==         suppressed: 0 bytes in 0 blocks
+==00:00:00:04.373 31499== 
+==00:00:00:04.373 31499== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==00:00:00:04.373 31499== 
+==00:00:00:04.373 31499== 1 errors in context 1 of 3:
+==00:00:00:04.373 31499== Invalid read of size 4
+==00:00:00:04.373 31499==    at 0x1086E5: main (oob_test.c:15)
+==00:00:00:04.373 31499==  Address 0x522d054 is 0 bytes after a block of size 20 alloc'd
+==00:00:00:04.373 31499==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==00:00:00:04.373 31499==    by 0x1086B0: main (oob_test.c:8)
+==00:00:00:04.373 31499== 
+==00:00:00:04.373 31499== 
+==00:00:00:04.373 31499== 1 errors in context 2 of 3:
+==00:00:00:04.373 31499== Invalid write of size 4
+==00:00:00:04.373 31499==    at 0x1086DB: main (oob_test.c:13)
+==00:00:00:04.373 31499==  Address 0x522d054 is 0 bytes after a block of size 20 alloc'd
+==00:00:00:04.373 31499==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==00:00:00:04.373 31499==    by 0x1086B0: main (oob_test.c:8)
+==00:00:00:04.373 31499== 
+==00:00:00:04.373 31499== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
