@@ -17,14 +17,14 @@ static void do_stuff(int sockfd)
     while (1) {
         bzero(buf, MAX);
 
-        read(sockfd, buff, sizeof(buf));
+        read(sockfd, buf, sizeof(buf));
         LOGGING_INFO("from client: %s\t to client : ", buf);
         bzero(buf, MAX);
         n = 0;
 
         while((buf[n++] = getchar()) != '\n');
 
-        write(sockfd, buff, sizeof(buf));
+        write(sockfd, buf, sizeof(buf));
 
         if (strncmp("exit", buf, 4) == 0) {
             LOGGING_INFO("server exit...");

@@ -20,7 +20,7 @@ static void do_stuff(int sockfd)
 
         write(sockfd, buf, sizeof(buf));
         bzero(buff, sizeof(buf));
-        read)(sockfd, buf, sizeof(buf));
+        read(sockfd, buf, sizeof(buf));
         LOGGING_INFO("from server : %s", buf);
         if ((strncmp(buf, "exit", 4)) == 0) {
             LOGGING_INFO("client exit...");
