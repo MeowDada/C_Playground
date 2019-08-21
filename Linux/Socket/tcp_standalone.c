@@ -60,7 +60,7 @@ void socket_server(int id, void *args)
     int val_read = read(client_fd, buffer, 1024);
     LOGGING_INFO("[SERVER]: read = %s", buffer);
 
-    char greetings[] = "Hello from server\0";
+    char greetings[] = "Hello from server";
     send(client_fd, greetings, strlen(greetings),0);
     LOGGING_INFO("[SERVER]: hello message sent");
 }
@@ -93,7 +93,7 @@ void socket_client(int id, void *args)
     }
     LOGGING_INFO("[CLIENT]: connection succeed");
 
-    char greetings[] = "Hello from client\0";
+    char greetings[] = "Hello from client";
     send(client_fd, greetings, strlen(greetings), 0);
     LOGGING_INFO("[CLIENT]: hello message sent");
 
