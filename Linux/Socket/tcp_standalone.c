@@ -9,20 +9,26 @@
 
 #define PORT 8080
 
+typedef struct socket_instance {
+    int fd;
+} socket_instance;
+
+void create_socket(int id, void *args)
+{
+    socket_instance *sock = (socket_instance *)args;
+
+    sock->fd = socket(AF_INET, SOCK_STREAM, 0);
+}
+
 void socket_server(int id, void *args)
 {
-    int server_fd = 0;
+    socket_instance *sock = (socket_instance *)args;
+
+    int server_fd = sock->fd;
     int client_fd = 0;
     int opt = 1;
     struct sockaddr_in address;
     int addrlen = sizeof(address);
-
-    LOGGING_INFO("[SERVER]: start creating server socket...");
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        LOGGING_ERROR("failed to create server socket");
-        return;
-    }
-    LOGGING_INFO("[SERVER]: create server socket successfully");
 
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
         &opt, sizeof(opt))) {
@@ -67,16 +73,11 @@ void socket_server(int id, void *args)
 
 void socket_client(int id, void *args)
 {
-    int client_fd = 0;
+    socket_instance *sock = (socket_instance *)args;
+
+    int client_fd = sock->fd;
     struct sockaddr_in address;
     char connect_target_ip[] = "127.0.0.1"; 
-
-    LOGGING_INFO("[CLIENT]: start creating client socket...");
-    if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        LOGGING_ERROR("failed to create client socket");
-        return;
-    }
-    LOGGING_INFO("[CLIENT]: create client socket successfully");
 
     address.sin_family = AF_INET;
     address.sin_port   = htons(PORT);
@@ -106,8 +107,17 @@ int main(int argc, char **argv)
 {
     setup_logger(NULL, LOG_LEVEL_INFO);
 
+    socket_instance *sock_server   = (socket_instance *)malloc(sizeof(socket_instance));
+    socket_instance *socket_client = (socket_instance *)malloc(sizeof(socket_instance));
+
     threadpool_t *server_thread = thpool_init(1);
     threadpool_t *client_thread = thpool_init(1);
+
+    thpool_add_work(server_thread, create_socket, (void *)sock_server);
+    thpool_add_work(client_thread, create_socket, (void *)socket_client);
+
+    thpool_wait(server_thread);
+    thpool_wait(client_thread);
 
     thpool_add_work(server_thread, socket_server, NULL);
     thpool_add_work(client_thread, socket_client, NULL);
