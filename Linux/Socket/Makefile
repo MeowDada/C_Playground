@@ -30,7 +30,7 @@ build_tcp_server:
 
 build_tcp_standalone:
 	$(CC) $(CFLAGS) -c $(TCP_STANDALONE_SRCS) -I $(INCLUDE_PATH)
-	$(CC) $(CFLAGS) -o $(TCP_STANDALONE_PROG) $(TCP_STANDALONE_OBJS) -L $(LIBRARY_PATH) -l common
+	$(CC) $(CFLAGS) -o $(TCP_STANDALONE_PROG) $(TCP_STANDALONE_OBJS) -L $(LIBRARY_PATH) -l common -l pthread
 
 clean:
 	rm -rf $(TCP_CLIENT_PROG) $(TCP_SERVER_PROG) $(TCP_STANDALONE_PROG) $(wildcare *.o)
