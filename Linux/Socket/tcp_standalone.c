@@ -42,14 +42,15 @@ void socket_server(int id, void *args)
 
     LOGGING_INFO("[SERVER]: start binding...");
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        LOGGING_ERROR("server socket failed to bind");
+        LOGGING_ERROR("[SERVER]: server socket failed to bind");
         return;
     }
     LOGGING_INFO("[SERVER]: binding succeed");
 
     LOGGING_INFO("[SERVER]: start listening...");
     if (listen(server_fd, 3) < 0) {
-        LOGGING_ERROR("server socket failed to listen");
+        LOGGING_ERROR("[SERVER]: server socket failed to listen");
+        LOGGING_ERROR("[SERVER]: %s", strerror(errno));
         return;
     }
     LOGGING_INFO("[SERVER]: listening succeed");
@@ -57,18 +58,19 @@ void socket_server(int id, void *args)
     LOGGING_INFO("[SERVER]: start accepting client...");
     if ((client_fd = accept(server_fd, (struct sockaddr *)&address,
         (socklen_t *)&addrlen)) < 0) {
-        LOGGING_ERROR("server socket failed to accept");
+        LOGGING_ERROR("[SERVER]: server socket failed to accept");
         return;
     }
     LOGGING_INFO("[SERVER]: accept client succeed");
 
-    char buffer[1024];
+    char buffer[1024] = {0};
     int val_read = read(client_fd, buffer, 1024);
     LOGGING_INFO("[SERVER]: read = %s", buffer);
 
-    char greetings[] = "Hello from server";
+    char *greetings = "Hello from server";
     send(client_fd, greetings, strlen(greetings),0);
     LOGGING_INFO("[SERVER]: hello message sent");
+    free(greetings);
 }
 
 void socket_client(int id, void *args)
@@ -90,15 +92,17 @@ void socket_client(int id, void *args)
     LOGGING_INFO("[CLIENT]: client socket start connecting to %s", connect_target_ip);
     if (connect(client_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         LOGGING_ERROR("[CLIENT]: connection failed");
+        LOGGING_ERROR("[CLIENT]: %s", strerror(errno));
         return;
     }
     LOGGING_INFO("[CLIENT]: connection succeed");
 
-    char greetings[] = "Hello from client";
+    char *greetings = "Hello from client";
     send(client_fd, greetings, strlen(greetings), 0);
     LOGGING_INFO("[CLIENT]: hello message sent");
+    free(greetings);
 
-    char buffer[1024];
+    char buffer[1024] = {0};
     int valread = read(client_fd, buffer, 1024);
     LOGGING_INFO("[CLIENT]: read = %s", buffer);
 }
