@@ -1,95 +1,59 @@
-#include <netdb.h> 
-#include <netinet/in.h> 
-#include <stdlib.h> 
-#include <string.h> 
+// Server side C/C++ program to demonstrate Socket programming 
+#include <unistd.h> 
+#include <stdio.h> 
 #include <sys/socket.h> 
-#include <sys/types.h> 
-#include "logger.h"
-
-#define MAX 80 
+#include <stdlib.h> 
+#include <netinet/in.h> 
+#include <string.h> 
 #define PORT 8080 
-
-static void do_stuff(int sockfd)
-{
-    char buf[MAX];
-    int n = 0;
-
-    while (1) {
-        bzero(buf, MAX);
-
-        read(sockfd, buf, sizeof(buf));
-        LOGGING_INFO("from client: %s\t to client : ", buf);
-        bzero(buf, MAX);
-        n = 0;
-
-        while((buf[n++] = getchar()) != '\n');
-
-        write(sockfd, buf, sizeof(buf));
-
-        if (strncmp("exit", buf, 4) == 0) {
-            LOGGING_INFO("server exit...");
-            break;
-        }
-    }
-}
-
-int main(int argc, char **argv)
-{
-    setup_logger(NULL, LOG_LEVEL_INFO);
-
-    int sockfd, connfd, len;
-
-    struct sockaddr_in serv_addr, cli;
-
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1) {
-        LOGGING_ERROR("socket creation failed...");
-        goto end;
-    }
-    else {
-        LOGGING_INFO("socket created successfully");
-    }
-    bzero(&serv_addr, sizeof(serv_addr));
-
-    /* Assign IP and ports */
-    serv_addr.sin_family      = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port        = htons(PORT);
-
-    if ((bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr))) != 0) {
-        LOGGING_ERROR("socket bind failed...");
-        goto end;
-    }
-    else {
-        LOGGING_INFO("socket bind successfully");
-    }
-
-    /* start listening */
-    if ((listen(sockfd, 5)) != 0) {
-        LOGGING_ERROR("listen failed...");
-        goto end;
-    }
-    else {
-        LOGGING_INFO("server listening...");
-    }
-
-    len = sizeof(cli);
-
-    /* Accept the data packet from client and verification */
-    connfd = accept(sockfd, (struct sockaddr *)&cli, &len);
-    if (connfd < 0) {
-        LOGGING_ERROR("server accept failed...");
-        goto end;
-    }
-    else {
-        LOGGING_INFO("server accept the client...");
-    }
-    do_stuff(connfd);
-
-    close(sockfd);
-
-end:
-    close_logger(NULL);
-
-    return 0;
-}
+int main(int argc, char const *argv[]) 
+{ 
+	int server_fd, new_socket, valread; 
+	struct sockaddr_in address; 
+	int opt = 1; 
+	int addrlen = sizeof(address); 
+	char buffer[1024] = {0}; 
+	char *hello = "Hello from server"; 
+	
+	// Creating socket file descriptor 
+	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
+	{ 
+		perror("socket failed"); 
+		exit(EXIT_FAILURE); 
+	} 
+	
+	// Forcefully attaching socket to the port 8080 
+	if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
+												&opt, sizeof(opt))) 
+	{ 
+		perror("setsockopt"); 
+		exit(EXIT_FAILURE); 
+	} 
+	address.sin_family = AF_INET; 
+	address.sin_addr.s_addr = INADDR_ANY; 
+	address.sin_port = htons( PORT ); 
+	
+	// Forcefully attaching socket to the port 8080 
+	if (bind(server_fd, (struct sockaddr *)&address, 
+								sizeof(address))<0) 
+	{ 
+		perror("bind failed"); 
+		exit(EXIT_FAILURE); 
+	} 
+	if (listen(server_fd, 3) < 0) 
+	{ 
+		perror("listen"); 
+		exit(EXIT_FAILURE); 
+	} 
+	if ((new_socket = accept(server_fd, (struct sockaddr *)&address, 
+					(socklen_t*)&addrlen))<0) 
+	{ 
+		perror("accept"); 
+		exit(EXIT_FAILURE); 
+	} 
+	valread = read( new_socket , buffer, 1024); 
+	printf("%s\n",buffer ); 
+	send(new_socket , hello , strlen(hello) , 0 ); 
+	printf("Hello message sent\n"); 
+	return 0; 
+} 
