@@ -12,6 +12,9 @@ int main(int argc, char const *argv[])
 	struct sockaddr_in serv_addr; 
 	char *hello = "Hello from client"; 
 	char buffer[1024] = {0}; 
+
+    (int)valread;
+
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
 	{ 
 		printf("\n Socket creation error \n"); 
