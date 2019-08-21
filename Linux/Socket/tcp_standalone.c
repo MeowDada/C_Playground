@@ -108,19 +108,19 @@ int main(int argc, char **argv)
     setup_logger(NULL, LOG_LEVEL_INFO);
 
     socket_instance *sock_server   = (socket_instance *)malloc(sizeof(socket_instance));
-    socket_instance *socket_client = (socket_instance *)malloc(sizeof(socket_instance));
+    socket_instance *sock_client = (socket_instance *)malloc(sizeof(socket_instance));
 
     threadpool_t *server_thread = thpool_init(1);
     threadpool_t *client_thread = thpool_init(1);
 
     thpool_add_work(server_thread, create_socket, (void *)sock_server);
-    thpool_add_work(client_thread, create_socket, (void *)socket_client);
+    thpool_add_work(client_thread, create_socket, (void *)sock_client);
 
     thpool_wait(server_thread);
     thpool_wait(client_thread);
 
-    thpool_add_work(server_thread, socket_server, NULL);
-    thpool_add_work(client_thread, socket_client, NULL);
+    thpool_add_work(server_thread, socket_server, (void *)sock_server);
+    thpool_add_work(client_thread, socket_client, (void *)sock_client);
 
     thpool_wait(server_thread);
     thpool_wait(client_thread);
