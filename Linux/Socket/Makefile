@@ -28,7 +28,7 @@ build_tcp_server:
 	$(CC) $(CFLAGS) -c $(TCP_SERVER_SRCS) -I $(INCLUDE_PATH)
 	$(CC) $(CFLAGS) -o $(TCP_SERVER_PROG) $(TCP_SERVER_OBJS) -L $(LIBRARY_PATH) -l logger
 
-build_tcp_standalone
+build_tcp_standalone:
 	$(CC) $(CFLAGS) -c $(TCP_STANDALONE_SRCS) -I $(INCLUDE_PATH)
 	$(CC) $(CFLAGS) -o $(TCP_STANDALONE_PROG) $(TCP_STANDALONE_OBJS) -L $(LIBRARY_PATH) -l common
 
