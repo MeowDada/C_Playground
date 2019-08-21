@@ -52,7 +52,8 @@ void socket_server(int id, void *args)
     int val_read = read(client_fd, buffer, 1024);
     LOGGING_INFO("[SERVER] read = %s", buffer);
 
-    send(client_fd, "Hello from server", 0);
+    char greetins[] = "Hello from server";
+    send(client_fd, greetings, strlen(greetins),0);
     LOGGING_FATAL("[SERVER] hello message sent");
 }
 
@@ -79,7 +80,7 @@ void socket_client(int id, void *args)
         return;
     }
 
-    char *greetings = "Hello from client";
+    char greetings[] = "Hello from client";
     send(client_fd, greetings, strlen(greetings), 0);
     LOGGING_INFO("[CLIENT]: hello message sent");
 
