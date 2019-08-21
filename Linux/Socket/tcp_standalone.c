@@ -17,10 +17,12 @@ void socket_server(int id, void *args)
     struct sockaddr_in address;
     int addrlen = sizeof(address);
 
+    LOGGING_INFO("[SERVER]: start creating server socket...");
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         LOGGING_ERROR("failed to create server socket");
         return;
     }
+    LOGGING_INFO("[SERVER]: create server socket successfully");
 
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
         &opt, sizeof(opt))) {
@@ -32,55 +34,66 @@ void socket_server(int id, void *args)
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port        = htons(PORT);
 
+    LOGGING_INFO("[SERVER]: start binding...");
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         LOGGING_ERROR("server socket failed to bind");
         return;
     }
+    LOGGING_INFO("[SERVER]: binding succeed");
 
+    LOGGING_INFO("[SERVER]: start listening...");
     if (listen(server_fd, 3) < 0) {
         LOGGING_ERROR("server socket failed to listen");
         return;
     }
+    LOGGING_INFO("[SERVER]: listening succeed");
 
+    LOGGING_INFO("[SERVER]: start accepting client...");
     if ((client_fd = accept(server_fd, (struct sockaddr *)&address,
         (socklen_t *)&addrlen)) < 0) {
         LOGGING_ERROR("server socket failed to accept");
         return;
     }
+    LOGGING_INFO("[SERVER]: accept client succeed");
 
     char buffer[1024];
     int val_read = read(client_fd, buffer, 1024);
-    LOGGING_INFO("[SERVER] read = %s", buffer);
+    LOGGING_INFO("[SERVER]: read = %s", buffer);
 
-    char greetings[] = "Hello from server";
+    char greetings[] = "Hello from server\0";
     send(client_fd, greetings, strlen(greetings),0);
-    LOGGING_FATAL("[SERVER] hello message sent");
+    LOGGING_INFO("[SERVER]: hello message sent");
 }
 
 void socket_client(int id, void *args)
 {
     int client_fd = 0;
     struct sockaddr_in address;
+    char connect_target_ip[] = "127.0.0.1"; 
 
+    LOGGING_INFO("[CLIENT]: start creating client socket...");
     if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         LOGGING_ERROR("failed to create client socket");
         return;
     }
+    LOGGING_INFO("[CLIENT]: create client socket successfully");
 
     address.sin_family = AF_INET;
     address.sin_port   = htons(PORT);
 
-    if (inet_pton(AF_INET, "127.0.0.1", &address.sin_addr) <= 0) {
+    if (inet_pton(AF_INET, connect_target_ip, &address.sin_addr) <= 0) {
         LOGGING_ERROR("invalid address: address not supported");
         return;
     }
 
+    LOGGING_INFO("[CLIENT]: client socket start connecting to %s", connect_target_ip);
     if (connect(client_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         LOGGING_ERROR("[CLIENT]: connection failed");
         return;
     }
+    LOGGING_INFO("[CLIENT]: connection succeed");
 
-    char greetings[] = "Hello from client";
+    char greetings[] = "Hello from client\0";
     send(client_fd, greetings, strlen(greetings), 0);
     LOGGING_INFO("[CLIENT]: hello message sent");
 
