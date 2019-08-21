@@ -43,7 +43,7 @@ void socket_server(int id, void *args)
     }
 
     if ((client_fd = accept(server_fd, (struct sockaddr *)&address,
-        (socklen_t *)*addrlen)) < 0) {
+        (socklen_t *)&addrlen)) < 0) {
         LOGGING_ERROR("server socket failed to accept");
         return;
     }
@@ -67,7 +67,7 @@ void socket_client(int id, void *args)
     }
 
     address.sin_family = AF_INET;
-    address.sin_port   = htons(PORTO);
+    address.sin_port   = htons(PORT);
 
     if (inet_pton(AF_INET, "127.0.0.1", &address.sin_addr) <= 0) {
         LOGGING_ERROR("invalid address: address not supported");
